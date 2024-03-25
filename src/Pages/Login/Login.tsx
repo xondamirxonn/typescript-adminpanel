@@ -4,6 +4,10 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 
 export const Login = () => {
+  const token = Cookies.get("user-token");
+  if (token) {
+    window.location.replace("/");
+  }
   type Login = {
     phone_number: string;
     password: string;
@@ -13,13 +17,13 @@ export const Login = () => {
   };
   const { mutate } = usePostLogin();
   const navigate = useNavigate();
-  const onFinish = (data: Login) => {
-    console.log(data);
+  const onFinish = (values: Login) => {
+    console.log(values);
 
-    mutate(data, {
-      onSuccess: (data) => {
+    mutate(values, {
+      onSuccess: (values) => {
         navigate("/");
-        Cookies.set("user-token", data.token);
+        Cookies.set("user-token", values.token, { expires: 7 });
       },
     });
   };
