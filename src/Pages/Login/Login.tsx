@@ -1,19 +1,28 @@
-import { Button, Checkbox, Form, type FormProps, Input } from 'antd';
-
-type FieldType = {
-  username?: string;
-  password?: string;
-};
-
-const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
-  console.log('Success:', values);
-};
-
-const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {
-  console.log('Failed:', errorInfo);
-};
+import { Button, Form, type FormProps, Input } from "antd";
+import { usePostLogin } from "./service/mutation/usePostLogin";
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 export const Login = () => {
+  type Login = {
+    phone_number: string;
+    password: string;
+  };
+  const onFinishFailed: FormProps<Login>["onFinishFailed"] = (errorInfo) => {
+    console.log("Failed:", errorInfo);
+  };
+  const { mutate } = usePostLogin();
+  const navigate = useNavigate();
+  const onFinish = (data: Login) => {
+    console.log(data);
+
+    mutate(data, {
+      onSuccess: (data) => {
+        navigate("/");
+        Cookies.set("user-token", data.token);
+      },
+    });
+  };
   return (
     <Form
       name="basic"
@@ -25,24 +34,22 @@ export const Login = () => {
       onFinishFailed={onFinishFailed}
       autoComplete="off"
     >
-      <Form.Item<FieldType>
+      <Form.Item<Login>
         label="Username"
-        name="username"
+        name="phone_number"
         rules={[{ required: true, message: "Please input your username!" }]}
-        style={{width: "600px"}}
+        style={{ width: "600px" }}
       >
         <Input />
       </Form.Item>
 
-      <Form.Item<FieldType>
+      <Form.Item<Login>
         label="Password"
         name="password"
         rules={[{ required: true, message: "Please input your password!" }]}
       >
         <Input.Password />
       </Form.Item>
-
-    
 
       <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
         <Button type="primary" htmlType="submit">
@@ -51,5 +58,4 @@ export const Login = () => {
       </Form.Item>
     </Form>
   );
-
-}
+};
