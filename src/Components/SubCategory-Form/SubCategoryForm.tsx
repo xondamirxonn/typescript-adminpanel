@@ -12,20 +12,29 @@ import Dragger from "antd/es/upload/Dragger";
 import React from "react";
 import { useGetCategory } from "../../Pages/Category/service/query/useGetCategory";
 
+// type Categories = {
+//   id: number;
+//   title: string;
+//   image?: {
+//     file: File;
+//     fileList: FileList;
+//   };
+// };
 type Categories = {
-  id: number,
   title: string;
   image?: {
     file: File;
     fileList: FileList;
   };
+  parent: number;
   children: {
-    parent: number;
+    id: number;
     title: string;
-    image: string;
-  }[];
+    parent: {
+      id?: number;
+    };
+  };
 };
-
 export interface formSubmit {
   submit: (data: Categories) => void;
   isPending: boolean
@@ -61,7 +70,7 @@ export const SubCategoryForm: React.FC<formSubmit> = ({
       <Form.Item name="parent">
         <Select
           defaultValue={"Categories"}
-          options={categoryData?.results.map((item: Categories) => ({
+          options={categoryData?.results.map((item) => ({
             value: item.id,
             label: item.title,
           }))}

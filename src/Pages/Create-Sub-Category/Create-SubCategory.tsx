@@ -8,7 +8,7 @@ type Categories = {
     file: File;
     fileList: FileList;
   };
-  parent: number,
+  parent: number;
   children: {
     id: number;
     title: string;
@@ -26,11 +26,10 @@ export const CreateSubCategory = () => {
   };
   const SubCategoryAdd = (data: Categories) => {
     const formData = new FormData();
-    console.log(data);
 
     formData.append("title", data.title);
-    
-      formData.append("parent",data.parent);
+
+    formData.append("parent", String(data.parent));
     if (data.image) {
       formData.append("image", data.image.file);
     }
@@ -50,8 +49,10 @@ export const CreateSubCategory = () => {
     {
       key: "2",
       label: <Link to={"/create-sub-category"}>Create Sub Category</Link>,
-      children: <SubCategoryForm isPending={isPending} submit={SubCategoryAdd}  />,
+      children: (
+        <SubCategoryForm isPending={isPending} submit={SubCategoryAdd} />
+      ),
     },
   ];
-  return <Tabs defaultActiveKey="2" items={items} onChange={onChange}  />;
+  return <Tabs defaultActiveKey="2" items={items} onChange={onChange} />;
 };

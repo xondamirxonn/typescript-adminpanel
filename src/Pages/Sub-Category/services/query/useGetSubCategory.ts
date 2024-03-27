@@ -2,9 +2,16 @@ import { useQuery } from "@tanstack/react-query";
 import request from "../../../../config/request";
 
 interface SubCategory {
-  id: number;
-  title: string;
-  image: string;
+  count: number;
+  next: null | string;
+  previous: null | string;
+  results: {
+    parent: {
+      id: number;
+      title: string;
+      image: string;
+    };
+  };
 }
 export const useGetSubCategory = () => {
   return useQuery({

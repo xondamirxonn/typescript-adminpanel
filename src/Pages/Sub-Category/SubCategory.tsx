@@ -1,30 +1,37 @@
-import { Button, Image, Spin, Table, message } from "antd";
+import { Button, Image, Spin, Table, TableProps, message } from "antd";
 import { useGetSubCategory } from "./services/query/useGetSubCategory";
 import { useDeleteSubCategory } from "./services/mutation/useDeleteSubCategory";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
 type SubCategories = {
-  id: number;
+  id: string;
   title: string;
   image: string;
 };
+interface DataType {
+  key: number;
+  image: string;
+  id: number;
+  title: string;
+}
 export const SubCategory = () => {
   const queryClient = useQueryClient();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { data, isLoading } = useGetSubCategory();
   const { mutate } = useDeleteSubCategory();
   const subCategorPage = () => {
-    navigate("/create-sub-category")
-  }
-  const delSubCategory = (data: SubCategories) => {
-    mutate(data, {
+    navigate("/create-sub-category");
+  };
+  const delSubCategory = (id: string) => {
+    mutate(id, {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["sub-category"] });
         message.success("Sub Category deleted successfully");
       },
     });
   };
+
   const dataSource = data?.results.map((item: SubCategories) => ({
     key: item.id,
     image: item.image,
@@ -32,7 +39,7 @@ export const SubCategory = () => {
     title: item.title,
   }));
 
-  const columns = [
+  const columns: TableProps<DataType>["columns"] = [
     {
       title: "ID",
       dataIndex: "key",
@@ -64,7 +71,10 @@ export const SubCategory = () => {
       render: (_, data) => {
         return (
           <div style={{ display: "flex", gap: "1rem" }}>
-            <Button type="primary" onClick={() => delSubCategory(data?.id)}>
+            <Button
+              type="primary"
+              onClick={() => delSubCategory(String(data?.id))}
+            >
               Delete
             </Button>
             <Button type="primary">Edit</Button>
@@ -77,8 +87,14 @@ export const SubCategory = () => {
   return isLoading ? (
     <Spin fullscreen size="large" />
   ) : (
-    <div style={{display: "flex", flexDirection: "column", gap: "1rem"}}>
-      <Button onClick={subCategorPage} type="primary" style={{width: "150px"}} >Create Sub Category</Button>
+    <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+      <Button
+        onClick={subCategorPage}
+        type="primary"
+        style={{ width: "150px" }}
+      >
+        Create Sub Category
+      </Button>
       <Table dataSource={dataSource} columns={columns} />
     </div>
   );

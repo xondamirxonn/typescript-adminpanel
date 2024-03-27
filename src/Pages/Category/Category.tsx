@@ -1,18 +1,23 @@
-import { Button, Table, Image, Spin, message } from "antd";
+import { Button, Table, Image, Spin, message, TableProps } from "antd";
 import { useGetCategory } from "./service/query/useGetCategory";
 import { useDeleteAcc } from "./service/mutation/useCategoryDelete";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 
-  type Category = {
-    title: string;
-    id: number;
-    image: string;
-  };
+type Category = {
+  title: string;
+  id: number;
+  image: string;
+};
+
+interface DataType {
+  key: number;
+  image: string;
+  id: number;
+  title: string;
+}
 
 export const Category = () => {
-
-
   const { data, isLoading } = useGetCategory();
   const { mutate } = useDeleteAcc();
   const navigate = useNavigate();
@@ -20,14 +25,18 @@ export const Category = () => {
   const createPage = () => {
     navigate("/create-category");
   };
-  const del = (data: Category) => {
-    mutate(data, {
+  const del = (id: string) => {
+    mutate(id, {
       onSuccess: (data) => {
         console.log(data);
         queryClint.invalidateQueries({ queryKey: ["category"] });
         message.success("deleted successfully");
       },
     });
+  };
+
+  const EditPage = (id: string) => {
+    navigate(`/edit-category/${id}`);
   };
 
   const dataSource = data?.results.map((item: Category) => ({
@@ -37,7 +46,7 @@ export const Category = () => {
     title: item.title,
   }));
 
-  const columns = [
+  const columns: TableProps<DataType>["columns"] = [
     {
       title: "ID",
       dataIndex: "key",
@@ -69,10 +78,12 @@ export const Category = () => {
       render: (_, data) => {
         return (
           <div style={{ display: "flex", gap: "1rem" }}>
-            <Button type="primary" onClick={() => del(data?.id)}>
+            <Button type="primary" onClick={() => del(String(data?.id))}>
               Delete
             </Button>
-            <Button type="primary">Edit</Button>
+            <Button type="primary" onClick={() => EditPage(String(data?.id))}>
+              Edit
+            </Button>
           </div>
         );
       },

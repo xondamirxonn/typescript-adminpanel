@@ -4,7 +4,7 @@ import { Forms } from "../../Components/Form/Form";
 import { Tabs, TabsProps, message } from "antd";
 import { Link, } from "react-router-dom";
 
-type Categories = {
+export type Categories = {
   title: string;
   image?: {
     file: File;

@@ -1,11 +1,10 @@
-import { Button, Input, Upload, UploadFile, UploadProps, message } from "antd";
-import { Form, type FormProps } from "antd";
+import { Button, Image, Input, UploadFile, UploadProps } from "antd";
+import { Form } from "antd";
 import { InboxOutlined } from "@ant-design/icons";
 import Dragger from "antd/es/upload/Dragger";
 import React from "react";
 
 type Categories = {
-  parentId: number,
   title: string;
   image?: {
     file: File;
@@ -15,32 +14,38 @@ type Categories = {
 
 export interface formSubmit {
   submit: (data: Categories) => void;
+  initialValues?: {
+    title?: string;
+    image?: string;
+  };
 }
 
-export const Forms: React.FC<formSubmit> = ({ submit }) => {
+export const Forms: React.FC<formSubmit> = ({ submit, initialValues }) => {
   const [fileList, setFileList] = React.useState<UploadFile[]>([]);
 
   const onchange: UploadProps["onChange"] = ({ fileList }) => {
     setFileList(fileList);
   };
+console.log(initialValues?.title);
 
   return (
     <Form
       name="basic"
       style={{ maxWidth: 600 }}
-      initialValues={{ remember: true }}
+      initialValues={{ title: initialValues?.title }}
       onFinish={submit}
       layout="vertical"
       autoComplete="off"
     >
-      <Form.Item<Categories>
+      <Form.Item
         label="title"
         name="title"
+        
         rules={[{ required: true, message: "Please input your title!" }]}
       >
         <Input />
       </Form.Item>
-      <Form.Item<Categories>
+      <Form.Item
         name={"image"}
         rules={[{ required: true, message: "please insert a picture " }]}
       >
@@ -65,6 +70,7 @@ export const Forms: React.FC<formSubmit> = ({ submit }) => {
           </p>
         </Dragger>
       </Form.Item>
+      {initialValues && !fileList.length && <Image width={200} height={150} style={{objectFit: "contain"}} src={initialValues.image} />}
       <Form.Item>
         <Button type="primary" htmlType="submit">
           Submit

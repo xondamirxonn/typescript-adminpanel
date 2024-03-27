@@ -6,6 +6,7 @@ import { SubCategory } from "./Pages/Sub-Category/SubCategory";
 import { Brand } from "./Pages/Brand/Brand";
 import { CreateCategory } from "./Pages/Create-Category/Create-category";
 import { CreateSubCategory } from "./Pages/Create-Sub-Category/Create-SubCategory";
+import { EditCategory } from "./Pages/Category/Edit-Category";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/brand" element={<Brand />} />
           <Route path="/create-category" element={<CreateCategory />} />
           <Route path="/create-sub-category" element={<CreateSubCategory />} />
+          <Route path="/edit-category/:id" element={<EditCategory/>} />
         </Route>
       </Routes>
     </>

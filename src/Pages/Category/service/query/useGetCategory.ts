@@ -1,14 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
 import request from "../../../../config/request";
 
-interface Category {
-  title: string;
-  id: number;
-  image: string;
+export interface CategoryType {
+  count: number;
+  next: null | string;
+  previous: null | string;
+  results: {
+    children: [];
+    id: number;
+    image: string;
+    title: string;
+  }[];
 }
 export const useGetCategory = () => {
   return useQuery({
     queryKey: ["category"],
-    queryFn: () => request.get<Category>("/category/").then((res) => res.data),
+    queryFn: () => request.get<CategoryType>("/category/").then((res) => res.data),
   });
 };
