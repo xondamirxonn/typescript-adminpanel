@@ -17,15 +17,17 @@ export const Login = () => {
   };
   const { mutate } = usePostLogin();
   const navigate = useNavigate();
-  const onFinish = (values: Login) => {
-    console.log(values);
+  const onFinish = (data: Login) => {
+    console.log(data);
 
-    mutate(values, {
-      onSuccess: (values) => {
+    mutate(data, {
+      onSuccess: (data) => {
         navigate("/");
-        Cookies.set("user-token", values.token, { expires: 7 });
+        Cookies.set("user-token", data.token, { expires: 7 });
+        
       },
     });
+    console.log(data);
   };
   return (
     <Form
@@ -44,7 +46,7 @@ export const Login = () => {
         rules={[{ required: true, message: "Please input your username!" }]}
         style={{ width: "600px" }}
       >
-        <Input />
+        <Input  />
       </Form.Item>
 
       <Form.Item<Login>
