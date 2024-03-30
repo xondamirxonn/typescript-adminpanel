@@ -5,6 +5,7 @@ import {
   UploadOutlined,
   UserOutlined,
   VideoCameraOutlined,
+  BarChartOutlined
 } from "@ant-design/icons";
 import { Layout, Menu, Button, theme } from "antd";
 import { Link, Outlet} from "react-router-dom";
@@ -32,18 +33,23 @@ const MainLayout: React.FC = () => {
           items={[
             {
               key: "1",
-              icon: <UserOutlined />,
-              label: <Link to={"/category"}>Category</Link>
+              icon: <BarChartOutlined />,
+              label: <Link to={"/"}>Dashboard</Link>,
             },
             {
               key: "2",
-              icon: <VideoCameraOutlined />,
-              label: <Link to={"/sub-category"}>Sub Category</Link>
+              icon: <UserOutlined />,
+              label: <Link to={"/category"}>Category</Link>,
             },
             {
               key: "3",
+              icon: <VideoCameraOutlined />,
+              label: <Link to={"/sub-category"}>Sub Category</Link>,
+            },
+            {
+              key: "4",
               icon: <UploadOutlined />,
-              label: <Link to={"/brand"}>Brand</Link>
+              label: <Link to={"/brand"}>Brand</Link>,
             },
           ]}
         />

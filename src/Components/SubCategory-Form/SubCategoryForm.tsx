@@ -2,6 +2,7 @@ import { InboxOutlined, LoadingOutlined } from "@ant-design/icons";
 import {
   Button,
   Form,
+  Image,
   Input,
   Select,
   Spin,
@@ -20,7 +21,7 @@ import { useGetCategory } from "../../Pages/Category/service/query/useGetCategor
 //     fileList: FileList;
 //   };
 // };
-type Categories = {
+export type Categories = {
   title: string;
   image?: {
     file: File;
@@ -37,12 +38,17 @@ type Categories = {
 };
 export interface formSubmit {
   submit: (data: Categories) => void;
-  isPending: boolean
+  isPending: boolean;
+  initialValue?: {
+    title?: string;
+    image?: string;
+  };
 }
 
 export const SubCategoryForm: React.FC<formSubmit> = ({
   submit,
-  isPending
+  isPending,
+  initialValue,
 }) => {
   const { data: categoryData } = useGetCategory();
   const [fileList, setFileList] = React.useState<UploadFile[]>([]);
@@ -55,7 +61,7 @@ export const SubCategoryForm: React.FC<formSubmit> = ({
     <Form
       name="basic"
       style={{ maxWidth: 600 }}
-      initialValues={{ remember: true }}
+      initialValues={{ title: initialValue?.title }}
       onFinish={submit}
       layout="vertical"
       autoComplete="off"
@@ -101,15 +107,28 @@ export const SubCategoryForm: React.FC<formSubmit> = ({
           </p>
         </Dragger>
       </Form.Item>
+      {initialValue && !fileList.length && (
+        <Image
+          width={200}
+          height={150}
+          style={{ objectFit: "contain" }}
+          src={initialValue.image}
+        />
+      )}
       <Form.Item>
         <Button type="primary" htmlType="submit" disabled={isPending}>
-          {isPending ? (
-            <Spin
-              indicator={<LoadingOutlined style={{ fontSize: 24, color: "white" }} spin />}
-            />
-          ) : (
-            "Submit"
-          )}
+          {isPending
+            ? (
+                <Spin
+                  indicator={
+                    <LoadingOutlined
+                      style={{ fontSize: 24, color: "white" }}
+                      spin
+                    />
+                  }
+                />
+              )
+            : "Submit"}
         </Button>
       </Form.Item>
     </Form>

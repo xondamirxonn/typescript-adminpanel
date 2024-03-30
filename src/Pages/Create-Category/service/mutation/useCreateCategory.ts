@@ -7,6 +7,13 @@ export interface CreateCategory {
     file: File;
     fileList: FileList;
   };
+  children: [
+    {
+      id: string;
+      title: string;
+      image: string;
+    }
+  ];
 }
 export const useCreateCategory = () => {
   return useMutation({

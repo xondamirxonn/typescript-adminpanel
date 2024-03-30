@@ -4,8 +4,20 @@ import { InboxOutlined } from "@ant-design/icons";
 import Dragger from "antd/es/upload/Dragger";
 import React from "react";
 
-type Categories = {
+export type Categories = {
+  // id: string;
+  // title: string;
+  // image?: {
+  //   file: File ;
+  //   fileList: FileList;
+  // };
+
+  id: string;
   title: string;
+  parent: {
+    id: string;
+    title: string;
+  };
   image?: {
     file: File;
     fileList: FileList;
@@ -26,28 +38,26 @@ export const Forms: React.FC<formSubmit> = ({ submit, initialValues }) => {
   const onchange: UploadProps["onChange"] = ({ fileList }) => {
     setFileList(fileList);
   };
-console.log(initialValues?.title);
 
   return (
     <Form
       name="basic"
       style={{ maxWidth: 600 }}
-      initialValues={{ title: initialValues?.title }}
       onFinish={submit}
       layout="vertical"
+      initialValues={{ title: initialValues?.title }}
       autoComplete="off"
     >
       <Form.Item
         label="title"
         name="title"
-        
         rules={[{ required: true, message: "Please input your title!" }]}
       >
         <Input />
       </Form.Item>
       <Form.Item
         name={"image"}
-        rules={[{ required: true, message: "please insert a picture " }]}
+        // rules={[{ required: true, message: "please insert a picture " }]}
       >
         <Dragger
           listType="picture-card"
@@ -70,7 +80,14 @@ console.log(initialValues?.title);
           </p>
         </Dragger>
       </Form.Item>
-      {initialValues && !fileList.length && <Image width={200} height={150} style={{objectFit: "contain"}} src={initialValues.image} />}
+      {initialValues && !fileList.length && (
+        <Image
+          width={200}
+          height={150}
+          style={{ objectFit: "contain" }}
+          src={initialValues?.image}
+        />
+      )}
       <Form.Item>
         <Button type="primary" htmlType="submit">
           Submit

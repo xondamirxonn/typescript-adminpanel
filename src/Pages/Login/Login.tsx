@@ -24,7 +24,6 @@ export const Login = () => {
       onSuccess: (data) => {
         navigate("/");
         Cookies.set("user-token", data.token, { expires: 7 });
-        
       },
     });
     console.log(data);
@@ -35,7 +34,7 @@ export const Login = () => {
       labelCol={{ span: 8 }}
       wrapperCol={{ span: 16 }}
       style={{ display: "grid", justifyContent: "center" }}
-      initialValues={{ remember: true }}
+      initialValues={{ phone_number: "+" + 998977109944, password: 87654321 }}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
@@ -46,7 +45,7 @@ export const Login = () => {
         rules={[{ required: true, message: "Please input your username!" }]}
         style={{ width: "600px" }}
       >
-        <Input  />
+        <Input />
       </Form.Item>
 
       <Form.Item<Login>

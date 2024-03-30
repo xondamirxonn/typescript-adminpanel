@@ -2,9 +2,11 @@ import { useCreateCategory } from "./service/mutation/useCreateCategory";
 
 import { Forms } from "../../Components/Form/Form";
 import { Tabs, TabsProps, message } from "antd";
-import { Link, } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export type Categories = {
+  id: string;
   title: string;
   image?: {
     file: File;
@@ -13,7 +15,11 @@ export type Categories = {
 };
 export const CreateCategory = () => {
   const { mutate } = useCreateCategory();
-
+  const [activeKey, setActiveKey] = useState("1");
+  const [disabled, setDisabled] = useState(true);
+  const [categoryId, setCategoryId] = useState();
+  const [formSubmit, setFormSubmit] = useState(false);
+  const navigate = useNavigate()
   const addCategory = (data: Categories) => {
     const formData = new FormData();
     formData.append("title", data.title);
@@ -21,14 +27,50 @@ export const CreateCategory = () => {
     formData.append("parent", "");
 
     mutate(formData, {
-      onSuccess: () => {
+      onSuccess: (res) => {
         message.success("Category added successfully");
+        setFormSubmit(true);
+        setCategoryId(res);
+        console.log(res);
+        
       },
       onError: () => {
         message.error("error");
       },
     });
   };
+
+  const SubCategoryCreate = (data: Categories) => {
+    const formData = new FormData();
+
+    formData.append("title", data.title);
+
+    formData.append("parent", categoryId?.data.id);
+    if (data.image) {
+      formData.append("image", data.image.file);
+    }
+
+    mutate(formData, {
+      onSuccess: (res) => {
+        console.log(res);
+
+        message.success("Subcategory added successfully");
+        setFormSubmit(true);
+        setTimeout(() => {
+          navigate("/category")
+        }, 3_500);
+      },
+      onError: (error) => {
+        message.error(error.name);
+      },
+    });
+  };
+  useEffect(() => {
+    if (formSubmit) {
+      setActiveKey("2");
+      setDisabled(false);
+    }
+  });
 
   const onChange = (key: string) => {
     console.log(key);
@@ -38,30 +80,16 @@ export const CreateCategory = () => {
     {
       key: "1",
       label: "Create Category",
-      children: <Forms submit={addCategory} />
+      children: <Forms submit={addCategory} />,
     },
     {
       key: "2",
-      label: <Link to={"/create-sub-category"}>Create Sub Category</Link>,
+      label: `Create Sub Category`,
+      children: <Forms submit={SubCategoryCreate} />,
+      disabled: disabled,
     },
   ];
-
-  // const submit = (value: TypeCategory) => {
-  //   const formData = new FormData();
-  //   formData.append("title", value.title);
-  //   if (value.image) formData.append("image", value.image.file);
-  //   formData.append("parent", "");
-
-  //   mutate(formData, {
-  //     onSuccess: () => {
-  //       message.success("success");
-  //     },
-  //     onError: () => {
-  //       message.error("error");
-  //     },
-  //   });
-  //   console.log(formData);
-  // };
+  console.log(items);
 
   return (
     // <Form
@@ -108,6 +136,6 @@ export const CreateCategory = () => {
     //   </Form.Item>
     // </Form>
     // <Forms submit={addCategory} />
-    <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
+    <Tabs activeKey={activeKey} items={items} onChange={onChange} />
   );
 };

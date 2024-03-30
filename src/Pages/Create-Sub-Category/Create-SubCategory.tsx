@@ -1,7 +1,9 @@
 import { Tabs, TabsProps, message } from "antd";
-import { Link } from "react-router-dom";
 import { SubCategoryForm } from "../../Components/SubCategory-Form/SubCategoryForm";
 import { useCreateCategory } from "../Create-Category/service/mutation/useCreateCategory";
+import { AttributeForm } from "../../Components/attribute-form/Attribute-Form";
+import { useCreateAttribute } from "../Sub-Category/Attribute/services/mutation/useCreateAttribute";
+import { useEffect, useState } from "react";
 type Categories = {
   title: string;
   image?: {
@@ -18,11 +20,41 @@ type Categories = {
   };
 };
 
+interface AttributeType {
+  items: [{ title: string; values: [{ value: string }] }];
+}
+
 export const CreateSubCategory = () => {
   const { mutate, isPending } = useCreateCategory();
-
+  const { mutate: attribute } = useCreateAttribute();
+  const [atrId, setAtrId] = useState();
+  const [activeKey, setActiveKey] = useState("1");
+  const [disabled, setDisabled] = useState(true);
+  const [formSubmit, setFormSubmit] = useState(false);
   const onChange = (key: string) => {
     console.log(key);
+  };
+
+  const attribueSubmit = (data: AttributeType) => {
+    const attributes = data.items.map((item) => {
+      return {
+        attribute_id: null,
+        title: item.title,
+        values: item?.values?.map((item2) => {
+          return { value: item2.value, value_id: null };
+        }),
+      };
+    });
+    const value = { attributes, category_id: atrId?.data.id };
+    attribute(value, {
+      onSuccess: () => {
+        message.success("Success");
+        console.log(value);
+      },
+      onError: (error) => {
+        message.error(error.message);
+      },
+    });
   };
   const SubCategoryAdd = (data: Categories) => {
     const formData = new FormData();
@@ -37,22 +69,32 @@ export const CreateSubCategory = () => {
     mutate(formData, {
       onSuccess: (res) => {
         console.log(res);
+        setAtrId(res)
         message.success("Subcategory added successfully");
+        setFormSubmit(true)
       },
     });
   };
+   useEffect(() => {
+     if (formSubmit) {
+       setActiveKey("2");
+       setDisabled(false);
+     }
+   });
   const items: TabsProps["items"] = [
     {
       key: "1",
-      label: <Link to={"/create-category"}>Create Category</Link>,
-    },
-    {
-      key: "2",
-      label: <Link to={"/create-sub-category"}>Create Sub Category</Link>,
+      label: "Create Sub Category",
       children: (
         <SubCategoryForm isPending={isPending} submit={SubCategoryAdd} />
       ),
     },
+    {
+      key: "2",
+      label: "Create Attribute",
+      children: <AttributeForm submit={attribueSubmit} />,
+      disabled: disabled
+    },
   ];
-  return <Tabs defaultActiveKey="2" items={items} onChange={onChange} />;
+  return <Tabs activeKey={activeKey} items={items} onChange={onChange} />;
 };

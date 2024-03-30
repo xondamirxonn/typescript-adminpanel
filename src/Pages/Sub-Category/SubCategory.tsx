@@ -23,6 +23,8 @@ export const SubCategory = () => {
   const subCategorPage = () => {
     navigate("/create-sub-category");
   };
+  console.log(data);
+  
   const delSubCategory = (id: string) => {
     mutate(id, {
       onSuccess: () => {
@@ -31,6 +33,12 @@ export const SubCategory = () => {
       },
     });
   };
+  const SubEdit = (id: string) => {
+    navigate(`/edit-sub-category/${id}`);
+  };
+  // if (Error) {
+  //   return message.error(`${Error.name}`);
+  // }
 
   const dataSource = data?.results.map((item: SubCategories) => ({
     key: item.id,
@@ -77,7 +85,9 @@ export const SubCategory = () => {
             >
               Delete
             </Button>
-            <Button type="primary">Edit</Button>
+            <Button type="primary" onClick={() => SubEdit(String(data.id))}>
+              Edit
+            </Button>
           </div>
         );
       },
@@ -87,6 +97,12 @@ export const SubCategory = () => {
   return isLoading ? (
     <Spin fullscreen size="large" />
   ) : (
+    // ) : String(Error) ? (
+    //   (message.error(`${"Network error"}`),
+    //   setTimeout(() => {
+    //     navigate("/");
+    //   }, 3_000)
+    //   )
     <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
       <Button
         onClick={subCategorPage}
