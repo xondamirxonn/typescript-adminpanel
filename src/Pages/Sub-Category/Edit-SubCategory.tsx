@@ -28,13 +28,11 @@ export type SubCategroyEdit = {
 export const EditSubCategory = () => {
   const { id } = useParams();
   const { data, isLoading } = useSingleEditData(id);
-  // const { mutate: editAttribute } = useEditAttribute(id);
+
   console.log(data);
 
- 
   const { mutate } = useEditCategory(id);
-  // const {mutate: deleteAttribute} = useDeleteAttribute()
-  // const queryClient = useQueryClient()
+
   console.log(data);
 
   const EditSubCategory = (data: SubCategroyEdit) => {
@@ -45,9 +43,6 @@ export const EditSubCategory = () => {
     mutate(formData, {
       onSuccess: () => {
         message.success("Sub Category changed successfully");
-        // setTimeout(() => {
-        //   navigate("/category");
-        // }, 3_500);
       },
       onError: () => {
         message.error("error");
@@ -73,7 +68,7 @@ export const EditSubCategory = () => {
     {
       key: "2",
       label: "Attributes",
-      children: <AttributeForm  />,
+      children: <AttributeForm submit={null} initialValue={data}  />,
     },
   ];
   return isLoading ? (

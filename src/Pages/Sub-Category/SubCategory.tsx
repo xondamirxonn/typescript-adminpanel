@@ -40,7 +40,7 @@ export const SubCategory = () => {
   //   return message.error(`${Error.name}`);
   // }
 
-  const dataSource = data?.results.map((item: SubCategories) => ({
+  const dataSource = data?.results.map((item) => ({
     key: item.id,
     image: item.image,
     id: item.id,

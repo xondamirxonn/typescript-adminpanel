@@ -6,12 +6,10 @@ interface SubCategory {
   next: null | string;
   previous: null | string;
   results: {
-    parent: {
-      id: number;
-      title: string;
-      image: string;
-    };
-  };
+    id: number;
+    title: string;
+    image: string;
+  }[];
 }
 export const useGetSubCategory = () => {
   return useQuery({

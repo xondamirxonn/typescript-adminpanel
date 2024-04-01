@@ -27,7 +27,7 @@ interface AttributeType {
 export const CreateSubCategory = () => {
   const { mutate, isPending } = useCreateCategory();
   const { mutate: attribute } = useCreateAttribute();
-  const [atrId, setAtrId] = useState();
+  const [atrId, setAtrId] = useState<string | undefined>(undefined);
   const [activeKey, setActiveKey] = useState("1");
   const [disabled, setDisabled] = useState(true);
   const [formSubmit, setFormSubmit] = useState(false);
@@ -36,6 +36,8 @@ export const CreateSubCategory = () => {
   };
 
   const attribueSubmit = (data: AttributeType) => {
+    console.log(data);
+
     const attributes = data.items.map((item) => {
       return {
         attribute_id: null,
@@ -69,18 +71,18 @@ export const CreateSubCategory = () => {
     mutate(formData, {
       onSuccess: (res) => {
         console.log(res);
-        setAtrId(res)
+        setAtrId(res);
         message.success("Subcategory added successfully");
-        setFormSubmit(true)
+        setFormSubmit(true);
       },
     });
   };
-   useEffect(() => {
-     if (formSubmit) {
-       setActiveKey("2");
-       setDisabled(false);
-     }
-   });
+  useEffect(() => {
+    if (formSubmit) {
+      setActiveKey("2");
+      setDisabled(false);
+    }
+  });
   const items: TabsProps["items"] = [
     {
       key: "1",
@@ -93,7 +95,7 @@ export const CreateSubCategory = () => {
       key: "2",
       label: "Create Attribute",
       children: <AttributeForm submit={attribueSubmit} />,
-      disabled: disabled
+      disabled: disabled,
     },
   ];
   return <Tabs activeKey={activeKey} items={items} onChange={onChange} />;
