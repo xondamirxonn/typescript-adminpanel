@@ -2,14 +2,14 @@ import { useMutation } from "@tanstack/react-query";
 import request from "../../../../../config/request";
 interface Attribute {
   attributes: {
-    attribute_id: null | string;
+    attribute_id: null;
     title: string;
     values: {
       value: string;
-      value_id: null | string;
+      value_id: null;
     }[];
   }[];
-  category_id: string;
+  category_id: string | null | undefined;
 }
 export const useCreateAttribute = () => {
   return useMutation({

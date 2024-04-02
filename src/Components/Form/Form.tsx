@@ -5,12 +5,7 @@ import Dragger from "antd/es/upload/Dragger";
 import React from "react";
 
 export type Categories = {
-  // id: string;
-  // title: string;
-  // image?: {
-  //   file: File ;
-  //   fileList: FileList;
-  // };
+
 
   id: string;
   title: string;
@@ -28,7 +23,10 @@ export interface formSubmit {
   submit: (data: Categories) => void;
   initialValues?: {
     title?: string;
-    image?: string;
+    image?: {
+      file: File | string;
+      fileList: FileList | string;
+    };
   };
 }
 
@@ -85,7 +83,7 @@ export const Forms: React.FC<formSubmit> = ({ submit, initialValues }) => {
           width={200}
           height={150}
           style={{ objectFit: "contain" }}
-          src={initialValues?.image}
+          src={typeof initialValues?.image == "string" ? initialValues.image : ""}
         />
       )}
       <Form.Item>

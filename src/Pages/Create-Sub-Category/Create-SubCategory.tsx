@@ -21,14 +21,18 @@ type Categories = {
 };
 
 interface AttributeType {
-  items: [{ title: string; values: [{ value: string }] }];
+  items: {
+    title: string;
+
+    values: { value: string }[];
+  }[];
 }
 
 export const CreateSubCategory = () => {
   const { mutate, isPending } = useCreateCategory();
   const { mutate: attribute } = useCreateAttribute();
-  const [atrId, setAtrId] = useState<string | undefined>(undefined);
-  const [activeKey, setActiveKey] = useState("1");
+  const [atrId, setAtrId] = useState("");
+  const [activeKey, setActiveKey] = useState("");
   const [disabled, setDisabled] = useState(true);
   const [formSubmit, setFormSubmit] = useState(false);
   const onChange = (key: string) => {
@@ -47,7 +51,7 @@ export const CreateSubCategory = () => {
         }),
       };
     });
-    const value = { attributes, category_id: atrId?.data.id };
+    const value = { attributes, category_id: atrId };
     attribute(value, {
       onSuccess: () => {
         message.success("Success");
@@ -71,7 +75,7 @@ export const CreateSubCategory = () => {
     mutate(formData, {
       onSuccess: (res) => {
         console.log(res);
-        setAtrId(res);
+        setAtrId(String(res.data.id));
         message.success("Subcategory added successfully");
         setFormSubmit(true);
       },

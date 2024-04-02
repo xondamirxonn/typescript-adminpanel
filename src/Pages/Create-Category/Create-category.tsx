@@ -17,9 +17,9 @@ export const CreateCategory = () => {
   const { mutate } = useCreateCategory();
   const [activeKey, setActiveKey] = useState("1");
   const [disabled, setDisabled] = useState(true);
-  const [categoryId, setCategoryId] = useState();
+  const [categoryId, setCategoryId] = useState("");
   const [formSubmit, setFormSubmit] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const addCategory = (data: Categories) => {
     const formData = new FormData();
     formData.append("title", data.title);
@@ -30,9 +30,8 @@ export const CreateCategory = () => {
       onSuccess: (res) => {
         message.success("Category added successfully");
         setFormSubmit(true);
-        setCategoryId(res);
-        console.log(res);
-        
+        setCategoryId(String(res.data.id) );
+       
       },
       onError: () => {
         message.error("error");
@@ -45,19 +44,19 @@ export const CreateCategory = () => {
 
     formData.append("title", data.title);
 
-    formData.append("parent", categoryId?.data.id);
+    formData.append("parent", categoryId);
     if (data.image) {
       formData.append("image", data.image.file);
     }
 
     mutate(formData, {
       onSuccess: (res) => {
-        console.log(res);
+        console.log(res.data);
 
         message.success("Subcategory added successfully");
         setFormSubmit(true);
         setTimeout(() => {
-          navigate("/category")
+          navigate("/category");
         }, 3_500);
       },
       onError: (error) => {

@@ -2,6 +2,7 @@ import { Button, Card, Form, Input, Space, message } from "antd";
 import { CloseOutlined, MinusCircleOutlined } from "@ant-design/icons";
 import React from "react";
 import { useDeleteAttributeValue } from "../../Pages/Sub-Category/Attribute/services/mutation/useDeleteAttributeValue";
+import { CreateCategory } from "../../Pages/Create-Category/service/mutation/useCreateCategory";
 type AttributeType = {
   items: [{ title: string; values: [{ value: string }] }];
 };
@@ -17,24 +18,26 @@ export interface attribueSubmit {
       }[];
     }[];
   };
+  data?: CreateCategory;
 }
 export const AttributeForm: React.FC<attribueSubmit> = ({
   submit,
   initialValue,
+  data,
 }) => {
   const { mutate } = useDeleteAttributeValue();
   const [form] = Form.useForm();
   const DeleteValue = (id: string) => {
     mutate(id, {
       onSuccess: () => {
-        console.log("o'chirildi");
         message.success("Success");
       },
       onError: (error) => {
-        message.error(error.name);
+        message.error(error.message);
       },
     });
   };
+
   return (
     <Form
       form={form}
@@ -61,11 +64,16 @@ export const AttributeForm: React.FC<attribueSubmit> = ({
                 title={`Item ${field.name + 1}`}
                 key={field.key}
                 extra={
-                  <CloseOutlined
-                    onClick={() => {
-                      remove(field.name);
-                    }}
-                  />
+                  <Button
+                    type="text"
+                    disabled={!data?.attributes[0].values.length ? false : true}
+                  >
+                    <CloseOutlined
+                      onClick={() => {
+                        remove(field.name);
+                      }}
+                    />
+                  </Button>
                 }
               >
                 <Form.Item label="Name" name={[field.name, "title"]}>
@@ -91,9 +99,12 @@ export const AttributeForm: React.FC<attribueSubmit> = ({
                             <MinusCircleOutlined
                               onClick={() => {
                                 subOpt.remove(subField.name);
-                                DeleteValue(
-                                  initialValue?.attributes.values?.id
-                                );
+                                const deletedValueId =
+                                  initialValue?.attributes?.[field.key]
+                                    ?.values[subField.key]?.id;
+                                if (deletedValueId) {
+                                  DeleteValue(deletedValueId);
+                                }
                               }}
                             />
                           </Space>

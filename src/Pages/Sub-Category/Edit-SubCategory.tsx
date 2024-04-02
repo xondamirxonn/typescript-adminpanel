@@ -4,7 +4,7 @@ import { useSingleEditData } from "../Category/service/query/useSingleEditData";
 import { Spin, Tabs, TabsProps, message } from "antd";
 import { Forms } from "../../Components/Form/Form";
 import { AttributeForm } from "../../Components/attribute-form/Attribute-Form";
-// import { useEditAttribute } from "./Attribute/services/mutation/useEditAttribute";
+import { useCreateAttribute } from "./Attribute/services/mutation/useCreateAttribute";
 
 export type SubCategroyEdit = {
   id: string;
@@ -25,13 +25,16 @@ export type SubCategroyEdit = {
 //   id: string;
 //   title: string;
 // }
+interface AttributeType {
+  items: { title: string; values: { value: string }[] }[];
+}
 export const EditSubCategory = () => {
   const { id } = useParams();
   const { data, isLoading } = useSingleEditData(id);
-
   console.log(data);
 
   const { mutate } = useEditCategory(id);
+  const { mutate: editAttribute } = useCreateAttribute();
 
   console.log(data);
 
@@ -46,6 +49,28 @@ export const EditSubCategory = () => {
       },
       onError: () => {
         message.error("error");
+      },
+    });
+  };
+
+  const editAttributeSubmit = (data: AttributeType) => {
+    const attributes = data.items.map((item) => {
+      return {
+        attribute_id: null,
+        title: item.title,
+        values: item?.values?.map((item2) => {
+          return { value: item2.value, value_id: null };
+        }),
+      };
+    });
+    const value = { attributes, category_id: null };
+    editAttribute(value, {
+      onSuccess: () => {
+        message.success("Success");
+        console.log(value);
+      },
+      onError: (error) => {
+        message.error(error.message);
       },
     });
   };
@@ -68,7 +93,13 @@ export const EditSubCategory = () => {
     {
       key: "2",
       label: "Attributes",
-      children: <AttributeForm submit={null} initialValue={data}  />,
+      children: (
+        <AttributeForm
+          submit={editAttributeSubmit}
+          initialValue={data}
+          data={data}
+        />
+      ),
     },
   ];
   return isLoading ? (

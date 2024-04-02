@@ -4,14 +4,14 @@ export interface CreateCategory {
   id: string;
   title: string;
   image: {
-    file: File;
-    fileList: FileList;
+    file: File | string;
+    fileList: FileList | string;
   };
   children: {
     id: string;
     title: string;
     image: string;
-  };
+  }[];
   attributes: {
     id: string | null;
     title: string;
@@ -20,12 +20,22 @@ export interface CreateCategory {
       value: string;
     }[];
   }[];
+
+}
+
+interface categoriesType {
+  data: {
+    id: string;
+    title: string;
+    image: string;
+    parent: number;
+  };
 }
 export const useCreateCategory = () => {
   return useMutation({
     mutationFn: (data: FormData) =>
       request
-        .post<CreateCategory>("/category/", data, {
+        .post<categoriesType>("/category/", data, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
