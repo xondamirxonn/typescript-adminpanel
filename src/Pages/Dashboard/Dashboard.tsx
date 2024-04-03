@@ -9,7 +9,7 @@ export const Dashboard = () => {
   const { data, isLoading } = useGetCategory();
   const { data: SubCategory } = useGetSubCategory();
   const { data: Brand } = useGetBrand();
-  console.log(SubCategory);
+
 
   return isLoading ? (
     <Spin size="large" fullscreen />

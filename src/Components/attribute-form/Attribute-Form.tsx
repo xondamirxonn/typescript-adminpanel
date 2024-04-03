@@ -3,6 +3,8 @@ import { CloseOutlined, MinusCircleOutlined } from "@ant-design/icons";
 import React from "react";
 import { useDeleteAttributeValue } from "../../Pages/Sub-Category/Attribute/services/mutation/useDeleteAttributeValue";
 import { CreateCategory } from "../../Pages/Create-Category/service/mutation/useCreateCategory";
+import { useDeleteAttribute } from "../../Pages/Sub-Category/Attribute/services/mutation/useDeleteAttribute";
+import { useQueryClient } from "@tanstack/react-query";
 type AttributeType = {
   items: [{ title: string; values: [{ value: string }] }];
 };
@@ -26,11 +28,25 @@ export const AttributeForm: React.FC<attribueSubmit> = ({
   data,
 }) => {
   const { mutate } = useDeleteAttributeValue();
+  const { mutate: Attribute } = useDeleteAttribute();
   const [form] = Form.useForm();
+  const queryClient = useQueryClient()
   const DeleteValue = (id: string) => {
     mutate(id, {
       onSuccess: () => {
         message.success("Success");
+      },
+      onError: (error) => {
+        message.error(error.message);
+      },
+    });
+  };
+
+  const DeleteAttribute = (id: string) => {
+    Attribute(id, {
+      onSuccess: () => {
+        message.success("Success");
+        queryClient.invalidateQueries({ queryKey: ["single-data"] });
       },
       onError: (error) => {
         message.error(error.message);
@@ -66,11 +82,16 @@ export const AttributeForm: React.FC<attribueSubmit> = ({
                 extra={
                   <Button
                     type="text"
-                    disabled={!data?.attributes[0].values.length ? false : true}
+                    disabled={
+                      !data?.attributes[field.key]?.values.length ? false : true
+                    }
                   >
                     <CloseOutlined
                       onClick={() => {
                         remove(field.name);
+                        const deleteAttribute =
+                          initialValue?.attributes[field.key].id;
+                        if (deleteAttribute) DeleteAttribute(deleteAttribute);
                       }}
                     />
                   </Button>
@@ -100,8 +121,9 @@ export const AttributeForm: React.FC<attribueSubmit> = ({
                               onClick={() => {
                                 subOpt.remove(subField.name);
                                 const deletedValueId =
-                                  initialValue?.attributes?.[field.key]
-                                    ?.values[subField.key]?.id;
+                                  initialValue?.attributes?.[field.key]?.values[
+                                    subField.key
+                                  ]?.id;
                                 if (deletedValueId) {
                                   DeleteValue(deletedValueId);
                                 }

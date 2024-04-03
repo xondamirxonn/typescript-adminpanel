@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Forms } from "../../Components/Form/Form";
 import { useSingleEditData } from "./service/query/useSingleEditData";
 import { useEditCategory } from "./service/mutation/useEditCategory";
@@ -34,7 +34,7 @@ export const EditCategory = () => {
   const { mutate } = useEditCategory(id);
   const { mutate: DeleteSubCategory } = useDeleteSubCategory();
   const queryClient = useQueryClient();
-
+  const navigate = useNavigate();
   const EditSubmit = (data: Categories) => {
     const formData = new FormData();
     formData.append("title", data.title);
@@ -44,6 +44,7 @@ export const EditCategory = () => {
     mutate(formData, {
       onSuccess: () => {
         message.success("Category changed successfully");
+        queryClient.invalidateQueries({ queryKey: ["single-data"] });
       },
       onError: () => {
         message.error("error");
@@ -51,10 +52,9 @@ export const EditCategory = () => {
     });
   };
 
-  const onChange = (key: string) => {
-    console.log(key);
+  const EditPage = (id: string) => {
+    navigate(`/edit-sub-category/${id}`);
   };
-
   const delSubCategory = (id: string) => {
     DeleteSubCategory(id, {
       onSuccess: () => {
@@ -66,7 +66,7 @@ export const EditCategory = () => {
       },
     });
   };
-  const dataSource = data?.children.map((item: CategoryChild) => ({
+  const dataSource = data?.children?.map((item: CategoryChild) => ({
     key: item.id,
     image: item.image,
     id: item.id,
@@ -111,7 +111,9 @@ export const EditCategory = () => {
             >
               Delete
             </Button>
-            <Button type="primary">Edit</Button>
+            <Button type="primary" onClick={() => EditPage(data?.id)}>
+              Edit
+            </Button>
           </div>
         );
       },
@@ -140,7 +142,7 @@ export const EditCategory = () => {
     <Spin fullscreen />
   ) : (
     <div>
-      <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
+      <Tabs defaultActiveKey="1" items={items} />
     </div>
   );
 };

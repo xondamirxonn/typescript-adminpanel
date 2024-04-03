@@ -30,8 +30,7 @@ export const CreateCategory = () => {
       onSuccess: (res) => {
         message.success("Category added successfully");
         setFormSubmit(true);
-        setCategoryId(String(res.data.id) );
-       
+        setCategoryId(String(res.data.id));
       },
       onError: () => {
         message.error("error");
@@ -50,9 +49,7 @@ export const CreateCategory = () => {
     }
 
     mutate(formData, {
-      onSuccess: (res) => {
-        console.log(res.data);
-
+      onSuccess: () => {
         message.success("Subcategory added successfully");
         setFormSubmit(true);
         setTimeout(() => {
@@ -71,10 +68,6 @@ export const CreateCategory = () => {
     }
   });
 
-  const onChange = (key: string) => {
-    console.log(key);
-  };
-
   const items: TabsProps["items"] = [
     {
       key: "1",
@@ -88,53 +81,6 @@ export const CreateCategory = () => {
       disabled: disabled,
     },
   ];
-  console.log(items);
 
-  return (
-    // <Form
-    //   name="basic"
-    //   labelCol={{ span: 8 }}
-    //   wrapperCol={{ span: 16 }}
-    //   style={{ maxWidth: 600 }}
-    //   initialValues={{ remember: true }}
-    //   onFinish={addCategory}
-    //   onFinishFailed={onFinishFailed}
-    //   autoComplete="off"
-    // >
-    //   <Form.Item<Categories>
-    //     label="title"
-    //     name="title"
-    //     rules={[{ required: true, message: "Please input your title!" }]}
-    //   >
-    //     <Input />
-    //   </Form.Item>
-    //   <Form.Item<Categories> name={"image"}>
-    //     <Dragger
-    //       listType="picture-card"
-    //       multiple={false}
-    //       maxCount={1}
-    //       {...props}
-    //     >
-    //       <p className="ant-upload-drag-icon">
-    //         {" "}
-    //         <InboxOutlined />
-    //       </p>
-    //       <p className="ant-upload-text">
-    //         Click or drag file to this area to upload
-    //       </p>
-    //       <p className="ant-upload-hint">
-    //         Support for a single or bulk upload. Strictly prohibited from
-    //         uploading company data or other banned files.
-    //       </p>
-    //     </Dragger>
-    //   </Form.Item>
-    //   <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-    //     <Button type="primary" htmlType="submit">
-    //       Submit
-    //     </Button>
-    //   </Form.Item>
-    // </Form>
-    // <Forms submit={addCategory} />
-    <Tabs activeKey={activeKey} items={items} onChange={onChange} />
-  );
+  return <Tabs activeKey={activeKey} items={items} />;
 };

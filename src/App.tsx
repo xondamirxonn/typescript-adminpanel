@@ -5,10 +5,11 @@ import { Category } from "./Pages/Category/Category";
 import { SubCategory } from "./Pages/Sub-Category/SubCategory";
 import { Brand } from "./Pages/Brand/Brand";
 import { CreateCategory } from "./Pages/Create-Category/Create-category";
-import { CreateSubCategory } from "./Pages/Create-Sub-Category/Create-SubCategory";
+import { CreateSubCategory } from "./Pages/Sub-Category/Create-Sub-Category/Create-SubCategory";
 import { EditCategory } from "./Pages/Category/Edit-Category";
 import { Dashboard } from "./Pages/Dashboard/Dashboard";
 import { EditSubCategory } from "./Pages/Sub-Category/Edit-SubCategory";
+import { Attribute } from "./Pages/Sub-Category/Attribute/Attribute";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/create-sub-category" element={<CreateSubCategory />} />
           <Route path="/edit-category/:id" element={<EditCategory />} />
           <Route path="/edit-sub-category/:id" element={<EditSubCategory />} />
+          <Route path="/attribute" element={<Attribute />} />
         </Route>
       </Routes>
     </>

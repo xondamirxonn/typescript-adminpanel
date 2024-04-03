@@ -19,24 +19,14 @@ export type SubCategroyEdit = {
   };
 };
 
-// interface DataType {
-//   key: string;
-//   image: string;
-//   id: string;
-//   title: string;
-// }
 interface AttributeType {
   items: { title: string; values: { value: string }[] }[];
 }
 export const EditSubCategory = () => {
   const { id } = useParams();
-  const { data, isLoading } = useSingleEditData(id);
-  console.log(data);
-
+  const { data: subCategory, isLoading } = useSingleEditData(id);
   const { mutate } = useEditCategory(id);
   const { mutate: editAttribute } = useCreateAttribute();
-
-  console.log(data);
 
   const EditSubCategory = (data: SubCategroyEdit) => {
     const formData = new FormData();
@@ -63,20 +53,16 @@ export const EditSubCategory = () => {
         }),
       };
     });
-    const value = { attributes, category_id: null };
+
+    const value = { attributes, category_id: subCategory?.id };
     editAttribute(value, {
       onSuccess: () => {
         message.success("Success");
-        console.log(value);
       },
       onError: (error) => {
         message.error(error.message);
       },
     });
-  };
-
-  const onChange = (key: string) => {
-    console.log(key);
   };
 
   const items: TabsProps["items"] = [
@@ -86,7 +72,10 @@ export const EditSubCategory = () => {
       children: (
         <Forms
           submit={EditSubCategory}
-          initialValues={{ title: data?.title, image: data?.image }}
+          initialValues={{
+            title: subCategory?.title,
+            image: subCategory?.image,
+          }}
         />
       ),
     },
@@ -96,8 +85,8 @@ export const EditSubCategory = () => {
       children: (
         <AttributeForm
           submit={editAttributeSubmit}
-          initialValue={data}
-          data={data}
+          initialValue={subCategory}
+          data={subCategory}
         />
       ),
     },
@@ -105,6 +94,6 @@ export const EditSubCategory = () => {
   return isLoading ? (
     <Spin fullscreen />
   ) : (
-    <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
+    <Tabs defaultActiveKey="1" items={items} />
   );
 };

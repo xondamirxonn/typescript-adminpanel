@@ -26,10 +26,11 @@ const MainLayout: React.FC = () => {
   return (
     <Layout>
       <Sider trigger={null} collapsible collapsed={collapsed} theme="light">
+      
         <div className="demo-logo-vertical" />
         <Menu
           mode="inline"
-          // defaultSelectedKeys={["1"]}
+          defaultSelectedKeys={["1"]}
           items={[
             {
               key: "1",
@@ -50,6 +51,11 @@ const MainLayout: React.FC = () => {
               key: "4",
               icon: <UploadOutlined />,
               label: <Link to={"/brand"}>Brand</Link>,
+            },
+            {
+              key: "5",
+              icon: <UploadOutlined />,
+              label: <Link to={"/attribute"}>Attribute</Link>
             },
           ]}
         />

@@ -1,8 +1,8 @@
 import { Tabs, TabsProps, message } from "antd";
-import { SubCategoryForm } from "../../Components/SubCategory-Form/SubCategoryForm";
-import { useCreateCategory } from "../Create-Category/service/mutation/useCreateCategory";
-import { AttributeForm } from "../../Components/attribute-form/Attribute-Form";
-import { useCreateAttribute } from "../Sub-Category/Attribute/services/mutation/useCreateAttribute";
+import { SubCategoryForm } from "../../../Components/SubCategory-Form/SubCategoryForm";
+import { useCreateCategory } from "../../Create-Category/service/mutation/useCreateCategory";
+import { AttributeForm } from "../../../Components/attribute-form/Attribute-Form";
+import { useCreateAttribute } from "../Attribute/services/mutation/useCreateAttribute";
 import { useEffect, useState } from "react";
 type Categories = {
   title: string;
@@ -32,7 +32,7 @@ export const CreateSubCategory = () => {
   const { mutate, isPending } = useCreateCategory();
   const { mutate: attribute } = useCreateAttribute();
   const [atrId, setAtrId] = useState("");
-  const [activeKey, setActiveKey] = useState("");
+  const [activeKey, setActiveKey] = useState("1");
   const [disabled, setDisabled] = useState(true);
   const [formSubmit, setFormSubmit] = useState(false);
   const onChange = (key: string) => {

@@ -1,4 +1,12 @@
-import { Button, Table, Image, Spin, message, TableProps } from "antd";
+import {
+  Button,
+  Table,
+  Image,
+  Spin,
+  message,
+  TableProps,
+  Popconfirm,
+} from "antd";
 import { useGetCategory } from "./service/query/useGetCategory";
 import { useDeleteAcc } from "./service/mutation/useCategoryDelete";
 import { useNavigate } from "react-router-dom";
@@ -78,9 +86,12 @@ export const Category = () => {
       render: (_, data) => {
         return (
           <div style={{ display: "flex", gap: "1rem" }}>
-            <Button type="primary" onClick={() => del(String(data?.id))}>
-              Delete
-            </Button>
+            <Popconfirm
+              title="Are you sure you want to delete this category?"
+              onConfirm={() => del(String(data?.id))}
+            >
+              <Button type="primary">Delete</Button>
+            </Popconfirm>
             <Button type="primary" onClick={() => EditPage(String(data?.id))}>
               Edit
             </Button>

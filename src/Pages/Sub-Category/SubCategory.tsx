@@ -1,14 +1,14 @@
-import { Button, Image, Spin, Table, TableProps, message } from "antd";
+import { Button, Image, Popconfirm, Spin, Table, TableProps, message } from "antd";
 import { useGetSubCategory } from "./services/query/useGetSubCategory";
 import { useDeleteSubCategory } from "./services/mutation/useDeleteSubCategory";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
-type SubCategories = {
-  id: string;
-  title: string;
-  image: string;
-};
+// type SubCategories = {
+//   id: string;
+//   title: string;
+//   image: string;
+// };
 interface DataType {
   key: number;
   image: string;
@@ -23,7 +23,7 @@ export const SubCategory = () => {
   const subCategorPage = () => {
     navigate("/create-sub-category");
   };
-  console.log(data);
+
   
   const delSubCategory = (id: string) => {
     mutate(id, {
@@ -36,9 +36,7 @@ export const SubCategory = () => {
   const SubEdit = (id: string) => {
     navigate(`/edit-sub-category/${id}`);
   };
-  // if (Error) {
-  //   return message.error(`${Error.name}`);
-  // }
+
 
   const dataSource = data?.results.map((item) => ({
     key: item.id,
@@ -79,12 +77,12 @@ export const SubCategory = () => {
       render: (_, data) => {
         return (
           <div style={{ display: "flex", gap: "1rem" }}>
-            <Button
-              type="primary"
-              onClick={() => delSubCategory(String(data?.id))}
+            <Popconfirm
+              title="Are you sure you want to delete this Sub Category?"
+              onConfirm={() => delSubCategory(String(data?.id))}
             >
-              Delete
-            </Button>
+              <Button type="primary">Delete</Button>
+            </Popconfirm>
             <Button type="primary" onClick={() => SubEdit(String(data.id))}>
               Edit
             </Button>
