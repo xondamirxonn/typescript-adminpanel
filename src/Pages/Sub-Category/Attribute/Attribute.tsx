@@ -2,6 +2,7 @@ import { Button, Popconfirm, Spin, Table, TableProps, message } from "antd";
 import { useGetAttribute } from "./services/query/useGetAttribute";
 import { useDeleteAttribute } from "./services/mutation/useDeleteAttribute";
 import { useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 interface DataType {
   key: number;
   image: string;
@@ -22,13 +23,17 @@ interface Type {
 export const Attribute = () => {
   const { data, isLoading } = useGetAttribute();
   const { mutate } = useDeleteAttribute();
-  const queryClint = useQueryClient()
+  const queryClint = useQueryClient();
+  const navigate = useNavigate();
 
+  const CreateAttributePage = () => {
+    navigate("/create-attribute");
+  };
   const deleteAttribute = (id: string) => {
     mutate(id, {
       onSuccess: () => {
         message.success("Deleted Successfully");
-           queryClint.invalidateQueries({ queryKey: ["attribute-data"] });
+        queryClint.invalidateQueries({ queryKey: ["attribute-data"] });
       },
     });
   };
@@ -80,6 +85,16 @@ export const Attribute = () => {
   return isLoading ? (
     <Spin fullscreen size="large" />
   ) : (
-    <Table dataSource={dataSource} columns={columns} />
+    <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+      <Button
+        onClick={CreateAttributePage}
+        size="large"
+        type="primary"
+        style={{ width: "150px" }}
+      >
+        Create Attribute
+      </Button>
+      <Table dataSource={dataSource} columns={columns} />
+    </div>
   );
 };
