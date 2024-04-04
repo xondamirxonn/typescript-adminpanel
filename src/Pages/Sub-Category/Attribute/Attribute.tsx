@@ -25,6 +25,7 @@ export const Attribute = () => {
   const { mutate } = useDeleteAttribute();
   const queryClint = useQueryClient();
   const navigate = useNavigate();
+console.log(data);
 
   const CreateAttributePage = () => {
     navigate("/create-attribute");

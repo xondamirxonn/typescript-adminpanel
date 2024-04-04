@@ -31,6 +31,8 @@ interface CategoryChild {
 export const EditCategory = () => {
   const { id } = useParams();
   const { data, isLoading } = useSingleEditData(id);
+  console.log(data);
+  
   const { mutate } = useEditCategory(id);
   const { mutate: DeleteSubCategory } = useDeleteSubCategory();
   const queryClient = useQueryClient();
