@@ -4,13 +4,19 @@ import {
   Image,
   Spin,
   message,
+  Input,
   TableProps,
   Popconfirm,
 } from "antd";
 import { useGetCategory } from "./service/query/useGetCategory";
 import { useDeleteAcc } from "./service/mutation/useCategoryDelete";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import useDebounce from "../../hook/useDebounce";
+import { useGetSearchCategory } from "./service/query/useGetSearchCategory";
+
+const { Search } = Input;
 
 type Category = {
   title: string;
@@ -30,6 +36,13 @@ export const Category = () => {
   const { mutate } = useDeleteAcc();
   const navigate = useNavigate();
   const queryClint = useQueryClient();
+  const [value, setValue] = useState("");
+
+  const search = useDebounce(value);
+  const { data: category, isLoading: isCategoryLoading } =
+    useGetSearchCategory(search);
+  console.log(data);
+
   const createPage = () => {
     navigate("/create-category");
   };
@@ -108,6 +121,67 @@ export const Category = () => {
       <Button onClick={createPage} type="primary" style={{ width: "150px" }}>
         Create
       </Button>
+
+      <div style={{ position: "relative" }}>
+        <Search
+          placeholder="input search text"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          allowClear
+          enterButton
+        />
+        <div
+          style={{
+            position: "absolute",
+            width: "96.2%",
+            zIndex: 2,
+          }}
+        >
+          {value.length >= 3 ? (
+            <div
+              style={{
+                background: "#f5eded",
+                boxShadow: "1px 1px 0px  2px #00000037",
+                // padding: "10px",
+                borderBottomLeftRadius: "3px",
+                borderBottomRightRadius: "3px",
+                maxHeight: "50vh",
+                overflowY: "auto",
+              }}
+            >
+              {isCategoryLoading ? (
+                <h1>Loading...</h1>
+              ) : (
+                category?.results.map((item) => (
+                  <Link
+                    to={`/edit-category/${item.id}`}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      color: "black",
+                      borderBottom: "1px solid gray",
+                      padding: "10px",
+                    }}
+                  >
+                    <div style={{ display: "flex", gap: "4rem" }}>
+                      <img
+                        style={{ width: "100px", objectFit: "contain" }}
+                        src={item.image}
+                        alt={item.title}
+                      />
+                      <h2 style={{ fontSize: "30px", fontWeight: "normal" }}>
+                        {item.title}
+                      </h2>
+                    </div>
+                  </Link>
+                ))
+              )}
+            </div>
+          ) : (
+            ""
+          )}
+        </div>
+      </div>
       <Table
         style={{ height: "70vh", overflow: "auto" }}
         dataSource={dataSource}

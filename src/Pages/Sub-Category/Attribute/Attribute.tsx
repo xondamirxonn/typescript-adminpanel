@@ -4,28 +4,18 @@ import { useDeleteAttribute } from "./services/mutation/useDeleteAttribute";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 interface DataType {
-  key: number;
-  image: string;
-  id: number;
+  key: string;
+  id: string;
   title: string;
-  category_title: {
-    title: string;
-  }[];
+  name: {};
 }
 
-interface Type {
-  title: string;
-  id: number;
-  category_title: {
-    title: string;
-  }[];
-}
 export const Attribute = () => {
   const { data, isLoading } = useGetAttribute();
   const { mutate } = useDeleteAttribute();
   const queryClint = useQueryClient();
   const navigate = useNavigate();
-console.log(data);
+  console.log(data);
 
   const CreateAttributePage = () => {
     navigate("/create-attribute");
@@ -38,11 +28,11 @@ console.log(data);
       },
     });
   };
-  const dataSource = data?.results.map((item: Type) => ({
+  const dataSource = data?.results.map((item) => ({
     key: item.id,
     id: item.id,
     title: item.title,
-    name: item.category_title.map((item) => item.title),
+    name: item.category_title.map((item) => item.title).join(",  "),
   }));
 
   const columns: TableProps<DataType>["columns"] = [

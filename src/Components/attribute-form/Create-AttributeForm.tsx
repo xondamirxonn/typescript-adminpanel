@@ -18,17 +18,12 @@ export const CreateAttributeForm: React.FC<formSubmit> = ({ submit }) => {
   const { data } = useGetSubCategory();
   console.log(data);
 
-
   const options: SelectProps["options"] = data?.results.map((item) => {
     return {
       label: item.title,
       value: item.id,
     };
   });
-
-  // const finish = (data: any) => {
-  //   console.log(data);
-  // };
 
   return (
     <Form layout="vertical" onFinish={submit}>
@@ -45,7 +40,7 @@ export const CreateAttributeForm: React.FC<formSubmit> = ({ submit }) => {
           options={options}
           optionRender={(option) => (
             <Space>
-              <span aria-label={option.data.value}>{option.data.value}</span>
+              <span aria-label={option.data.label}>{option.data.value}</span>
               {option.data.label}
             </Space>
           )}
