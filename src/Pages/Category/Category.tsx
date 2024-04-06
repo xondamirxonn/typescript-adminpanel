@@ -7,6 +7,7 @@ import {
   Input,
   TableProps,
   Popconfirm,
+  Pagination,
 } from "antd";
 import { useGetCategory } from "./service/query/useGetCategory";
 import { useDeleteAcc } from "./service/mutation/useCategoryDelete";
@@ -32,26 +33,27 @@ interface DataType {
 }
 
 export const Category = () => {
-  const { data, isLoading } = useGetCategory();
+  const [page, setPage] = useState<number>(1);
+  const { data, isLoading } = useGetCategory("id", page);
   const { mutate } = useDeleteAcc();
   const navigate = useNavigate();
   const queryClint = useQueryClient();
   const [value, setValue] = useState("");
-
   const search = useDebounce(value);
   const { data: category, isLoading: isCategoryLoading } =
     useGetSearchCategory(search);
-  console.log(data);
+
 
   const createPage = () => {
     navigate("/create-category");
   };
+
   const del = (id: string) => {
     mutate(id, {
-      onSuccess: (data) => {
-        console.log(data);
+      onSuccess: () => {
         queryClint.invalidateQueries({ queryKey: ["category"] });
-        message.success("deleted successfully");
+        queryClint.invalidateQueries({ queryKey: ["search-category"] });
+        message.success(` deleted successfully`);
       },
     });
   };
@@ -60,7 +62,7 @@ export const Category = () => {
     navigate(`/edit-category/${id}`);
   };
 
-  const dataSource = data?.results.map((item: Category) => ({
+  const dataSource = data?.data.results.map((item: Category) => ({
     key: item.id,
     image: item.image,
     id: item.id,
@@ -103,7 +105,7 @@ export const Category = () => {
               title="Are you sure you want to delete this category?"
               onConfirm={() => del(String(data?.id))}
             >
-              <Button type="primary">Delete</Button>
+              <Button danger>Delete</Button>
             </Popconfirm>
             <Button type="primary" onClick={() => EditPage(String(data?.id))}>
               Edit
@@ -118,74 +120,111 @@ export const Category = () => {
     <Spin size="large" fullscreen />
   ) : (
     <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
-      <Button onClick={createPage} type="primary" style={{ width: "150px" }}>
-        Create
-      </Button>
+      <div
+        style={{
+          display: "flex",
+          width: "100%",
+          gap: "5rem",
+          justifyContent: "space-between",
+        }}
+      >
+        <Button onClick={createPage} type="primary" style={{ width: "150px" }}>
+          Create
+        </Button>
 
-      <div style={{ position: "relative" }}>
-        <Search
-          placeholder="input search text"
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          allowClear
-          enterButton
-        />
-        <div
-          style={{
-            position: "absolute",
-            width: "96.2%",
-            zIndex: 2,
-          }}
-        >
-          {value.length >= 3 ? (
-            <div
-              style={{
-                background: "#f5eded",
-                boxShadow: "1px 1px 0px  2px #00000037",
-                // padding: "10px",
-                borderBottomLeftRadius: "3px",
-                borderBottomRightRadius: "3px",
-                maxHeight: "50vh",
-                overflowY: "auto",
-              }}
-            >
-              {isCategoryLoading ? (
-                <h1>Loading...</h1>
-              ) : (
-                category?.results.map((item) => (
-                  <Link
-                    to={`/edit-category/${item.id}`}
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      color: "black",
-                      borderBottom: "1px solid gray",
-                      padding: "10px",
-                    }}
-                  >
-                    <div style={{ display: "flex", gap: "4rem" }}>
-                      <img
-                        style={{ width: "100px", objectFit: "contain" }}
-                        src={item.image}
-                        alt={item.title}
-                      />
-                      <h2 style={{ fontSize: "30px", fontWeight: "normal" }}>
-                        {item.title}
-                      </h2>
+        <div style={{ position: "relative", width: "100%" }}>
+          <Search
+            placeholder="Category search..."
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            allowClear
+            enterButton
+          />
+          <div
+            style={{
+              position: "absolute",
+              width: "95.5%",
+              zIndex: 2,
+            }}
+          >
+            {value.length >= 3 ? (
+              <div
+                style={{
+                  background: "#fff",
+                  boxShadow: "1px 1px 0px  2px #00000037",
+                  // padding: "10px",
+                  borderBottomLeftRadius: "3px",
+                  borderBottomRightRadius: "3px",
+                  maxHeight: "50vh",
+                  overflowY: "auto",
+                }}
+              >
+                {isCategoryLoading ? (
+                  <h1>Loading...</h1>
+                ) : (
+                  category?.results.map((item) => (
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        width: "95%",
+                        alignItems: "center",
+                        padding: "5px",
+                        borderBottom: "1px solid gray",
+                      }}
+                    >
+                      <Link
+                        to={`/edit-category/${item.id}`}
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          color: "black",
+                          width: "85%",
+                          padding: "15px",
+                        }}
+                      >
+                        <div style={{ display: "flex", gap: "4rem" }}>
+                          <img
+                            style={{ width: "100px", objectFit: "contain" }}
+                            src={item.image}
+                            alt={item.title}
+                          />
+                          <h2
+                            style={{ fontSize: "30px", fontWeight: "normal" }}
+                          >
+                            {item.title}
+                          </h2>
+                        </div>
+                      </Link>
+                      <Popconfirm
+                        title="Are you sure you want to delete this category?"
+                        onConfirm={() => del(String(item.id))}
+                      >
+                        <Button danger>Delete</Button>
+                      </Popconfirm>
                     </div>
-                  </Link>
-                ))
-              )}
-            </div>
-          ) : (
-            ""
-          )}
+                  ))
+                )}
+              </div>
+            ) : (
+              ""
+            )}
+          </div>
         </div>
       </div>
       <Table
         style={{ height: "70vh", overflow: "auto" }}
         dataSource={dataSource}
         columns={columns}
+        pagination={false}
+      />
+      <Pagination
+        onChange={(page) => setPage((page - 1) * 5)}
+        total={data?.pageSize}
+        defaultCurrent={page}
+        simple
+        style={{ display: "flex", justifyContent: "end" }}
+        pageSize={5}
       />
     </div>
   );

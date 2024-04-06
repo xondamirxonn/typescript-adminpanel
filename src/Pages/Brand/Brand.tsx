@@ -1,32 +1,55 @@
-import { Button, Image, Table, TableProps, message } from "antd";
+import {
+  Button,
+  Image,
+  Popconfirm,
+  Spin,
+  Table,
+  TableProps,
+  message,
+  Input,
+  Pagination,
+} from "antd";
 import { useGetBrand } from "./services/query/useGetBrand";
 import { useDeleteBrand } from "./services/mutation/useDeleteBrand";
 import { useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import useDebounce from "../../hook/useDebounce";
+import { useSearchBrand } from "./services/query/useSearchBrand";
+import { useFilterPaginationBran } from "./services/query/useFilterPaginationBran";
+
+const { Search } = Input;
 type Brand = {
   id: string;
   title: string;
   image: string;
 };
 interface DataType {
-  key: number;
+  key: string;
   image: string;
-  id: number;
+  id: string;
   title: string;
 }
 export const Brand = () => {
-  const { data } = useGetBrand();
+  const [page, setPage] = useState<number>(1);
+  const { data, isLoading } = useGetBrand();
   const { mutate } = useDeleteBrand();
   const queryClient = useQueryClient();
+  const [value, setValue] = useState("");
+  const search = useDebounce(value);
+  const { data: brandData, isLoading: searchLoading } = useSearchBrand(search);
+  const { data: PageData } = useFilterPaginationBran("id", page);
+  console.log(PageData);
+
   const delBrand = (id: string) => {
     mutate(id, {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["brand"] });
-
+        queryClient.invalidateQueries({ queryKey: ["search-brand"] });
         message.success("deleted successfully");
       },
     });
   };
-  const dataSource = data?.results.map((item: Brand) => ({
+  const dataSource = PageData?.data?.results.map((item) => ({
     key: item.id,
     image: item.image,
     id: item.id,
@@ -74,5 +97,117 @@ export const Brand = () => {
       },
     },
   ];
-  return <Table dataSource={dataSource} columns={columns} />;
+
+  return isLoading ? (
+    <Spin fullscreen size="large" />
+  ) : (
+    <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
+      <div
+        style={{
+          display: "flex",
+          width: "100%",
+          gap: "5rem",
+          justifyContent: "space-between",
+        }}
+      >
+        <Button type="primary" style={{ width: "150px" }}>
+          Create Brand
+        </Button>
+
+        <div style={{ position: "relative", width: "100%" }}>
+          <Search
+            placeholder="Brand search..."
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            allowClear
+            enterButton
+          />
+          <div
+            style={{
+              position: "absolute",
+              width: "95.5%",
+              zIndex: 2,
+            }}
+          >
+            {value.length >= 3 ? (
+              <div
+                style={{
+                  background: "#fff",
+                  boxShadow: "1px 1px 0px  2px #00000037",
+                  borderBottomLeftRadius: "3px",
+                  borderBottomRightRadius: "3px",
+                  maxHeight: "50vh",
+                  overflowY: "auto",
+                }}
+              >
+                {searchLoading ? (
+                  <h1>Loading...</h1>
+                ) : (
+                  brandData?.results.map((item) => (
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        width: "95%",
+                        alignItems: "center",
+                        padding: "5px",
+                        borderBottom: "1px solid gray",
+                      }}
+                    >
+                      <div
+                        // to={`/edit-category/${item.id}`}
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          color: "black",
+                          width: "85%",
+                          padding: "15px",
+                        }}
+                      >
+                        <div style={{ display: "flex", gap: "4rem" }}>
+                          <img
+                            style={{ width: "100px", objectFit: "contain" }}
+                            src={item.image}
+                            alt={item.title}
+                          />
+                          <h2
+                            style={{ fontSize: "30px", fontWeight: "normal" }}
+                          >
+                            {item.title}
+                          </h2>
+                        </div>
+                      </div>
+                      <Popconfirm
+                        title="Are you sure you want to delete this category?"
+                        onConfirm={() => delBrand(String(item.id))}
+                      >
+                        <Button danger>Delete</Button>
+                      </Popconfirm>
+                    </div>
+                  ))
+                )}
+              </div>
+            ) : (
+              ""
+            )}
+          </div>
+        </div>
+      </div>
+      <Table
+        style={{ height: "70vh", overflow: "auto" }}
+        dataSource={dataSource}
+        columns={columns}
+        pagination={false}
+      />
+
+      <Pagination
+        onChange={(page) => setPage((page - 1) * 5)}
+        total={PageData?.pageSize}
+        defaultCurrent={1}
+        simple
+        style={{display: "flex", justifyContent: "end"}}
+        pageSize={5}
+      />
+    </div>
+  );
 };

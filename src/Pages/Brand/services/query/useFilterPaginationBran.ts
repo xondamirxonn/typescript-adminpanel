@@ -1,25 +1,28 @@
 import { useQuery } from "@tanstack/react-query";
 import request from "../../../../config/request";
 
-export interface CategoryType {
+interface Brands {
   count: number;
-  next: null | string;
-  previous: null | string;
+  next: string | null;
+  previous: string | null;
   results: {
-    children: [];
-    id: number;
+    id: string;
     image: string;
     title: string;
   }[];
 }
-export const useGetCategory = (id: string = "id", page: number = 1) => {
+
+export const useFilterPaginationBran = (
+  id: string = "id",
+  page: number = 1
+) => {
   console.log(id, page);
 
   return useQuery({
-    queryKey: ["category", id, page],
+    queryKey: ["pagination-brand", id, page],
     queryFn: () => {
       return request
-        .get<CategoryType>(`/category/?ordering=${id}`, {
+        .get<Brands>(`/brand/?ordering=${id}`, {
           params: { offset: page, limit: 5 },
         })
         .then((res) => {

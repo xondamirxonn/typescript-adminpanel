@@ -3,13 +3,10 @@ import { useGetCategory } from "../Category/service/query/useGetCategory";
 import { useGetSubCategory } from "../Sub-Category/services/query/useGetSubCategory";
 import { useGetBrand } from "../Brand/services/query/useGetBrand";
 
-
-
 export const Dashboard = () => {
   const { data, isLoading } = useGetCategory();
   const { data: SubCategory } = useGetSubCategory();
   const { data: Brand } = useGetBrand();
-
 
   return isLoading ? (
     <Spin size="large" fullscreen />
@@ -29,7 +26,7 @@ export const Dashboard = () => {
           }}
         >
           <strong>Category</strong>
-          <span>{data?.results.length}</span>
+          <span>{data?.data.results.length}</span>
         </div>
       </Card>
       <Card
