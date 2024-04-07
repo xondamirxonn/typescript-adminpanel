@@ -136,7 +136,7 @@ export const Category = () => {
           <Search
             placeholder="Category search..."
             value={value}
-            onChange={(e) => setValue(e.target.value)}
+            onChange={(e) => setValue(e.target.value.trimStart())}
             allowClear
             enterButton
           />

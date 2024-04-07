@@ -16,6 +16,7 @@ import { useState } from "react";
 import useDebounce from "../../hook/useDebounce";
 import { useSearchBrand } from "./services/query/useSearchBrand";
 import { useFilterPaginationBran } from "./services/query/useFilterPaginationBran";
+import { useNavigate } from "react-router-dom";
 
 const { Search } = Input;
 type Brand = {
@@ -36,6 +37,7 @@ export const Brand = () => {
   const queryClient = useQueryClient();
   const [value, setValue] = useState("");
   const search = useDebounce(value);
+  const navigate = useNavigate();
   const { data: brandData, isLoading: searchLoading } = useSearchBrand(search);
   const { data: PageData } = useFilterPaginationBran("id", page);
   console.log(PageData);
@@ -98,6 +100,10 @@ export const Brand = () => {
     },
   ];
 
+  const CreateBrand = () => {
+    navigate("/create-brand");
+  };
+
   return isLoading ? (
     <Spin fullscreen size="large" />
   ) : (
@@ -110,7 +116,7 @@ export const Brand = () => {
           justifyContent: "space-between",
         }}
       >
-        <Button type="primary" style={{ width: "150px" }}>
+        <Button onClick={CreateBrand} type="primary" style={{ width: "150px" }}>
           Create Brand
         </Button>
 
@@ -205,7 +211,7 @@ export const Brand = () => {
         total={PageData?.pageSize}
         defaultCurrent={1}
         simple
-        style={{display: "flex", justifyContent: "end"}}
+        style={{ display: "flex", justifyContent: "end" }}
         pageSize={5}
       />
     </div>

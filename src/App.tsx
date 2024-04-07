@@ -11,6 +11,10 @@ import { Dashboard } from "./Pages/Dashboard/Dashboard";
 import { EditSubCategory } from "./Pages/Sub-Category/Edit-SubCategory";
 import { Attribute } from "./Pages/Sub-Category/Attribute/Attribute";
 import { CreateAttribute } from "./Pages/Sub-Category/Attribute/Create-Attribute";
+import { Product } from "./Pages/Product/Product";
+import { CreateProduct } from "./Pages/Product/Create-Product";
+import { EditProduct } from "./Pages/Product/Edit-Product";
+import { CreateBrand } from "./Pages/Brand/Create-Brand";
 
 function App() {
   return (
@@ -19,15 +23,19 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Dashboard />} />
-          <Route path="/category" element={<Category />} />
-          <Route path="/sub-category" element={<SubCategory />} />
-          <Route path="/brand" element={<Brand />} />
-          <Route path="/create-category" element={<CreateCategory />} />
-          <Route path="/create-sub-category" element={<CreateSubCategory />} />
-          <Route path="/edit-category/:id" element={<EditCategory />} />
-          <Route path="/edit-sub-category/:id" element={<EditSubCategory />} />
-          <Route path="/attribute" element={<Attribute />} />
-          <Route path="/create-attribute" element={<CreateAttribute />} />
+          <Route path="category" element={<Category />} />
+          <Route path="sub-category" element={<SubCategory />} />
+          <Route path="brand" element={<Brand />} />
+          <Route path="create-brand" element={<CreateBrand />} />
+          <Route path="create-category" element={<CreateCategory />} />
+          <Route path="create-sub-category" element={<CreateSubCategory />} />
+          <Route path="edit-category/:id" element={<EditCategory />} />
+          <Route path="edit-sub-category/:id" element={<EditSubCategory />} />
+          <Route path="attribute" element={<Attribute />} />
+          <Route path="create-attribute" element={<CreateAttribute />} />
+          <Route path="product" element={<Product />} />
+          <Route path="product/create" element={<CreateProduct />} />
+          <Route path="edit-product/:id" element={<EditProduct />} />
         </Route>
       </Routes>
     </>

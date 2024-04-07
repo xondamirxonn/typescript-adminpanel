@@ -26,7 +26,6 @@ const MainLayout: React.FC = () => {
   return (
     <Layout>
       <Sider trigger={null} collapsible collapsed={collapsed} theme="light">
-      
         <div className="demo-logo-vertical" />
         <Menu
           mode="inline"
@@ -55,7 +54,12 @@ const MainLayout: React.FC = () => {
             {
               key: "5",
               icon: <UploadOutlined />,
-              label: <Link to={"/attribute"}>Attribute</Link>
+              label: <Link to={"/attribute"}>Attribute</Link>,
+            },
+            {
+              key: "6",
+              icon: <UploadOutlined />,
+              label: <Link to={"/product"}>Product</Link>,
             },
           ]}
         />

@@ -76,7 +76,7 @@ export const SubCategoryForm: React.FC<formSubmit> = ({
       <Form.Item name="parent">
         <Select
           defaultValue={"Categories"}
-          options={categoryData?.results.map((item) => ({
+          options={categoryData?.data.results.map((item) => ({
             value: item.id,
             label: item.title,
           }))}
@@ -116,19 +116,12 @@ export const SubCategoryForm: React.FC<formSubmit> = ({
         />
       )}
       <Form.Item>
-        <Button type="primary" htmlType="submit" disabled={isPending}>
-          {isPending
-            ? (
-                <Spin
-                  indicator={
-                    <LoadingOutlined
-                      style={{ fontSize: 24, color: "white" }}
-                      spin
-                    />
-                  }
-                />
-              )
-            : "Submit"}
+        <Button
+          loading={isPending}
+          type="primary"
+          htmlType="submit"
+        >
+          Submit
         </Button>
       </Form.Item>
     </Form>
