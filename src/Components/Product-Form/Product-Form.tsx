@@ -8,6 +8,7 @@ import {
   Switch,
   UploadFile,
   UploadProps,
+  message,
 } from "antd";
 import { useGetSubCategory } from "../../Pages/Sub-Category/services/query/useGetSubCategory";
 import Dragger from "antd/es/upload/Dragger";
@@ -69,6 +70,11 @@ export const ProductForm: React.FC<formSubmit> = ({
         hasFeedback
         name={"category"}
         hidden={initialValue ? true : false}
+        rules={
+          initialValue
+            ? [{ required: false }]
+            : [{ required: true, message: "Select is required" }]
+        }
       >
         <Select
           defaultValue={"Parent Category"}
@@ -87,11 +93,27 @@ export const ProductForm: React.FC<formSubmit> = ({
         </Form.Item>
       </div>
 
-      <Form.Item name={"title"}>
+      <Form.Item
+        name={"title"}
+        rules={
+          initialValue
+            ? [{ required: false }]
+            : [{ required: true, message: "Title is required" }]
+        }
+        hasFeedback
+      >
         <Input />
       </Form.Item>
 
-      <Form.Item name={"price"}>
+      <Form.Item
+        name={"price"}
+        rules={
+          initialValue
+            ? [{ required: false }]
+            : [{ required: true, message: "Price is requried" }]
+        }
+        hasFeedback
+      >
         <InputNumber<number>
           formatter={(value) =>
             `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
@@ -103,8 +125,18 @@ export const ProductForm: React.FC<formSubmit> = ({
           style={{ width: "100%" }}
         />
       </Form.Item>
-      <Form.Item name={"image"}>
+      <Form.Item
+        name={"image"}
+        hasFeedback
+        rules={
+          initialValue
+            ? [{ required: false }]
+            : [{ required: true, message: "Image upload is mandatory" }]
+        }
+        
+      >
         <Dragger
+        
           listType="picture-card"
           multiple={false}
           maxCount={1}

@@ -3,7 +3,7 @@ import request from "../../../../config/request";
 
 export const useSingleProduct = (id: string | undefined) => {
   return useQuery({
-    queryKey: ["prodcut-single"],
+    queryKey: ["prodcut-single", id],
     queryFn: () => request.get(`/product/${id}/`).then((res) => res.data),
   });
 };

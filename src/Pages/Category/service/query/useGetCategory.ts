@@ -6,7 +6,7 @@ export interface CategoryType {
   next: null | string;
   previous: null | string;
   results: {
-    children: [];
+    children: {}[];
     id: number;
     image: string;
     title: string;

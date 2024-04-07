@@ -24,6 +24,7 @@ export const CreateProduct = () => {
   const { mutate, isPending } = useCreateProduct();
   const navigate = useNavigate()
   const CreateProduct = (data: ProductType) => {
+    
     const formData = new FormData();
     formData.append("title", data.title);
     formData.append("price", data.price);

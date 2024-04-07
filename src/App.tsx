@@ -15,6 +15,7 @@ import { Product } from "./Pages/Product/Product";
 import { CreateProduct } from "./Pages/Product/Create-Product";
 import { EditProduct } from "./Pages/Product/Edit-Product";
 import { CreateBrand } from "./Pages/Brand/Create-Brand";
+import { EditBrand } from "./Pages/Brand/Edit-Brand";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path="brand" element={<Brand />} />
           <Route path="create-brand" element={<CreateBrand />} />
           <Route path="create-category" element={<CreateCategory />} />
+          <Route path="edit-brand/:id" element={<EditBrand />} />
           <Route path="create-sub-category" element={<CreateSubCategory />} />
           <Route path="edit-category/:id" element={<EditCategory />} />
           <Route path="edit-sub-category/:id" element={<EditSubCategory />} />

@@ -43,7 +43,6 @@ export const Category = () => {
   const { data: category, isLoading: isCategoryLoading } =
     useGetSearchCategory(search);
 
-
   const createPage = () => {
     navigate("/create-category");
   };
@@ -152,7 +151,6 @@ export const Category = () => {
                 style={{
                   background: "#fff",
                   boxShadow: "1px 1px 0px  2px #00000037",
-                  // padding: "10px",
                   borderBottomLeftRadius: "3px",
                   borderBottomRightRadius: "3px",
                   maxHeight: "50vh",
@@ -226,6 +224,7 @@ export const Category = () => {
         style={{ display: "flex", justifyContent: "end" }}
         pageSize={5}
       />
+    
     </div>
   );
 };

@@ -1,11 +1,10 @@
-import { InboxOutlined, LoadingOutlined } from "@ant-design/icons";
+import { InboxOutlined } from "@ant-design/icons";
 import {
   Button,
   Form,
   Image,
   Input,
   Select,
-  Spin,
   UploadFile,
   UploadProps,
 } from "antd";
@@ -116,11 +115,7 @@ export const SubCategoryForm: React.FC<formSubmit> = ({
         />
       )}
       <Form.Item>
-        <Button
-          loading={isPending}
-          type="primary"
-          htmlType="submit"
-        >
+        <Button loading={isPending} type="primary" htmlType="submit">
           Submit
         </Button>
       </Form.Item>

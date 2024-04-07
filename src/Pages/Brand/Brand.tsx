@@ -9,7 +9,6 @@ import {
   Input,
   Pagination,
 } from "antd";
-import { useGetBrand } from "./services/query/useGetBrand";
 import { useDeleteBrand } from "./services/mutation/useDeleteBrand";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -32,16 +31,17 @@ interface DataType {
 }
 export const Brand = () => {
   const [page, setPage] = useState<number>(1);
-  const { data, isLoading } = useGetBrand();
   const { mutate } = useDeleteBrand();
   const queryClient = useQueryClient();
   const [value, setValue] = useState("");
   const search = useDebounce(value);
   const navigate = useNavigate();
   const { data: brandData, isLoading: searchLoading } = useSearchBrand(search);
-  const { data: PageData } = useFilterPaginationBran("id", page);
-  console.log(PageData);
+  const { data: PageData, isLoading } = useFilterPaginationBran("id", page);
 
+  const EditBrand = (id: string) => {
+    navigate(`/edit-brand/${id}`);
+  };
   const delBrand = (id: string) => {
     mutate(id, {
       onSuccess: () => {
@@ -93,7 +93,9 @@ export const Brand = () => {
             <Button type="primary" onClick={() => delBrand(String(data?.id))}>
               Delete
             </Button>
-            <Button type="primary">Edit</Button>
+            <Button type="primary" onClick={() => EditBrand(String(data.id))}>
+              Edit
+            </Button>
           </div>
         );
       },

@@ -19,6 +19,7 @@ interface DataType {
   id: number;
   title: string;
   image: string;
+  price: string;
 }
 
 export const Product = () => {
@@ -32,6 +33,7 @@ export const Product = () => {
     id: item.id,
     title: item.title,
     image: item.image,
+    price: "$" + item.price,
   }));
 
   const delProduct = (id: number) => {
@@ -70,6 +72,11 @@ export const Product = () => {
       title: "Title",
       dataIndex: "title",
       key: "title",
+    },
+    {
+      title: "Price",
+      dataIndex: "price",
+      key: "price",
     },
     {
       key: "action",

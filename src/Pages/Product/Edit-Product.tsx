@@ -11,9 +11,9 @@ interface EditProductType {
 
   category: string;
   id: number;
-  image: {
-    file: File;
-    fileList: FileList;
+  image?: {
+    file: File | string;
+    fileList: FileList | string;
   };
   is_available: boolean;
   is_new: boolean;
@@ -29,10 +29,15 @@ export const EditProduct = () => {
   console.log(data);
 
   const EditProduct = (data: EditProductType) => {
+    console.log(data);
+
     const formData = new FormData();
     formData.append("title", data.title);
     formData.append("price", data.price);
     formData.append("category", data.category);
+    if (data.image && (data.image.file as File)) {
+      formData.append("image", data.image.file);
+    }
     if (data.is_available === undefined) {
       formData.append("is_available", "false");
     } else {
@@ -43,7 +48,7 @@ export const EditProduct = () => {
     } else {
       formData.append("is_new", data.is_new.toString());
     }
-    if (data.image) formData.append("image", data.image.file);
+
     mutate(formData, {
       onSuccess: () => {
         message.success("Success");
