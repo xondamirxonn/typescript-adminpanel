@@ -61,6 +61,11 @@ const MainLayout: React.FC = () => {
               icon: <UploadOutlined />,
               label: <Link to={"/product"}>Product</Link>,
             },
+            {
+              key: "7",
+              icon: <UploadOutlined />,
+              label: <Link to={"/banner"}>Banner</Link>,
+            },
           ]}
         />
       </Sider>

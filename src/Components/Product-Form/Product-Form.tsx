@@ -121,7 +121,7 @@ export const ProductForm: React.FC<formSubmit> = ({
           parser={(value) =>
             value?.replace(/\$\s?|(,*)/g, "") as unknown as number
           }
-          // onChange={onChange}
+          
           style={{ width: "100%" }}
         />
       </Form.Item>
@@ -133,14 +133,13 @@ export const ProductForm: React.FC<formSubmit> = ({
             ? [{ required: false }]
             : [{ required: true, message: "Image upload is mandatory" }]
         }
-        
       >
         <Dragger
-        
           listType="picture-card"
           multiple={false}
           maxCount={1}
           beforeUpload={() => false}
+          accept=".png, .jpg, .svg, .jpeg "
           fileList={fileList}
           onChange={onchangeImg}
         >

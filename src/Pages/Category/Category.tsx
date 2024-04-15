@@ -8,15 +8,18 @@ import {
   TableProps,
   Popconfirm,
   Pagination,
+  Modal,
+  Tooltip,
 } from "antd";
 import { useGetCategory } from "./service/query/useGetCategory";
 import { useDeleteAcc } from "./service/mutation/useCategoryDelete";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import useDebounce from "../../hook/useDebounce";
 import { useGetSearchCategory } from "./service/query/useGetSearchCategory";
 
+import { SearchOutlined } from "@ant-design/icons";
 const { Search } = Input;
 
 type Category = {
@@ -33,7 +36,7 @@ interface DataType {
 }
 
 export const Category = () => {
-  const [page, setPage] = useState<number>(1);
+  const [page, setPage] = useState<number>();
   const { data, isLoading } = useGetCategory("id", page);
   const { mutate } = useDeleteAcc();
   const navigate = useNavigate();
@@ -42,6 +45,31 @@ export const Category = () => {
   const search = useDebounce(value);
   const { data: category, isLoading: isCategoryLoading } =
     useGetSearchCategory(search);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [arrow] = useState("Show");
+
+  const mergedArrow = useMemo(() => {
+    if (arrow === "Hide") {
+      return false;
+    }
+
+    if (arrow === "Show") {
+      return true;
+    }
+
+    return {
+      pointAtCenter: true,
+    };
+  }, [arrow]);
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+    setValue("");
+  };
 
   const createPage = () => {
     navigate("/create-category");
@@ -60,6 +88,58 @@ export const Category = () => {
   const EditPage = (id: string) => {
     navigate(`/edit-category/${id}`);
   };
+  const SearchCategory = category?.results.map((item: Category) => ({
+    key: item.id,
+    image: item.image,
+    id: item.id,
+    title: item.title,
+  }));
+  const SearchColumns: TableProps<DataType>["columns"] = [
+    {
+      title: "ID",
+      dataIndex: "key",
+      key: "key",
+    },
+    {
+      title: "Image",
+      dataIndex: "image",
+      key: "image",
+      render: (data: string) => {
+        return (
+          <Image
+            width={100}
+            height={80}
+            style={{ objectFit: "contain" }}
+            src={data}
+          />
+        );
+      },
+    },
+    {
+      title: "Title",
+      dataIndex: "title",
+      key: "title",
+    },
+    {
+      key: "action",
+      title: "Action",
+      render: (_, data) => {
+        return (
+          <div style={{ display: "flex", gap: "1rem" }}>
+            <Popconfirm
+              title="Are you sure you want to delete this category?"
+              onConfirm={() => del(String(data?.id))}
+            >
+              <Button danger>Delete</Button>
+            </Popconfirm>
+            <Button type="primary" onClick={() => EditPage(String(data?.id))}>
+              Edit
+            </Button>
+          </div>
+        );
+      },
+    },
+  ];
 
   const dataSource = data?.data.results.map((item: Category) => ({
     key: item.id,
@@ -127,88 +207,87 @@ export const Category = () => {
           justifyContent: "space-between",
         }}
       >
-        <Button onClick={createPage} type="primary" style={{ width: "150px" }}>
-          Create
-        </Button>
-
-        <div style={{ position: "relative", width: "100%" }}>
-          <Search
-            placeholder="Category search..."
-            value={value}
-            onChange={(e) => setValue(e.target.value.trimStart())}
-            allowClear
-            enterButton
-          />
-          <div
-            style={{
-              position: "absolute",
-              width: "95.5%",
-              zIndex: 2,
-            }}
+        <Tooltip  title="Create Category" placement="right" >
+          <Button
+            onClick={createPage}
+            type="primary"
+            style={{ width: "150px" }}
           >
-            {value.length >= 3 ? (
-              <div
-                style={{
-                  background: "#fff",
-                  boxShadow: "1px 1px 0px  2px #00000037",
-                  borderBottomLeftRadius: "3px",
-                  borderBottomRightRadius: "3px",
-                  maxHeight: "50vh",
-                  overflowY: "auto",
-                }}
-              >
-                {isCategoryLoading ? (
-                  <h1>Loading...</h1>
-                ) : (
-                  category?.results.map((item) => (
+            Create
+          </Button>
+        </Tooltip>
+
+        <Tooltip placement="leftTop" title={"Search"} arrow={mergedArrow}>
+          <Button
+            icon={<SearchOutlined />}
+            type="primary"
+            onClick={showModal}
+          ></Button>
+        </Tooltip>
+        <Modal
+          title="Search..."
+          open={isModalOpen}
+          onCancel={handleCancel}
+          cancelButtonProps={{ style: { marginTop: "1rem" } }}
+          okButtonProps={{ style: { display: "none" } }}
+          width="60%"
+          
+        >
+          <div style={{ width: "100%" }}>
+            <Search
+              id="search"
+              placeholder="Category search..."
+              value={value}
+              onChange={(e) => setValue(e.target.value.trimStart())}
+              allowClear
+              enterButton
+            />
+            <div>
+              {value.length >= 3 ? (
+                <div>
+                  {isCategoryLoading ? (
                     <div
                       style={{
                         display: "flex",
-                        justifyContent: "space-between",
-                        width: "95%",
-                        alignItems: "center",
-                        padding: "5px",
-                        borderBottom: "1px solid gray",
+                        justifyContent: "center",
+                        marginTop: "100px",
                       }}
                     >
-                      <Link
-                        to={`/edit-category/${item.id}`}
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          color: "black",
-                          width: "85%",
-                          padding: "15px",
-                        }}
-                      >
-                        <div style={{ display: "flex", gap: "4rem" }}>
-                          <img
-                            style={{ width: "100px", objectFit: "contain" }}
-                            src={item.image}
-                            alt={item.title}
-                          />
-                          <h2
-                            style={{ fontSize: "30px", fontWeight: "normal" }}
-                          >
-                            {item.title}
-                          </h2>
-                        </div>
-                      </Link>
-                      <Popconfirm
-                        title="Are you sure you want to delete this category?"
-                        onConfirm={() => del(String(item.id))}
-                      >
-                        <Button danger>Delete</Button>
-                      </Popconfirm>
+                      <Spin size="large" />
                     </div>
-                  ))
-                )}
-              </div>
-            ) : (
-              ""
-            )}
+                  ) : (
+                    <div>
+                      <Table
+                        style={{
+                          marginTop: "1rem",
+                          maxHeight: "50vh",
+                          overflowY: "auto",
+                        }}
+                        dataSource={SearchCategory}
+                        columns={SearchColumns}
+                        pagination={false}
+                      />
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <label
+                  htmlFor="search"
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    marginTop: "30px",
+                    cursor: "pointer",
+                  }}
+                >
+                  <h1>
+                    Search <SearchOutlined />
+                  </h1>
+                </label>
+              )}
+            </div>
           </div>
-        </div>
+        </Modal>
       </div>
       <Table
         style={{ height: "70vh", overflow: "auto" }}
@@ -220,11 +299,10 @@ export const Category = () => {
         onChange={(page) => setPage((page - 1) * 5)}
         total={data?.pageSize}
         defaultCurrent={page}
-        simple
+        // simple
         style={{ display: "flex", justifyContent: "end" }}
         pageSize={5}
       />
-    
     </div>
   );
 };

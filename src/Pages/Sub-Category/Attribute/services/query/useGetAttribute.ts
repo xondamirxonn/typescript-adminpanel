@@ -7,7 +7,7 @@ interface AttributeType {
   previous: null | number;
   results: {
     id: string;
-    category: {}[];
+    category: [];
     category_title: {
       title: string;
     }[];
