@@ -63,9 +63,9 @@ export const Attribute = () => {
               title="Are you sure you want to delete this category?"
               onConfirm={() => deleteAttribute(String(data?.id))}
             >
-              <Button type="primary">Delete</Button>
+              <Button danger >Delete</Button>
             </Popconfirm>
-            <Button type="primary">Edit</Button>
+            <Button >Edit</Button>
             {/* onClick={() => EditPage(String(data?.id))} */}
           </div>
         );

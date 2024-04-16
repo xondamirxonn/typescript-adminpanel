@@ -17,7 +17,7 @@ export const useCreateBanner = () => {
   return useMutation({
     mutationFn: (data: FormData) =>
       request
-        .post<BannerType>("/banner", data, {
+        .post<BannerType>("/banner/", data, {
           headers: { "Content-Type": "multipart/form-data" },
         })
         .then((res) => res.data),

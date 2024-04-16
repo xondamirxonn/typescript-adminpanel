@@ -22,9 +22,10 @@ interface ProductType {
 
 export const CreateProduct = () => {
   const { mutate, isPending } = useCreateProduct();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const CreateProduct = (data: ProductType) => {
-    
+    console.log(data);
+
     const formData = new FormData();
     formData.append("title", data.title);
     formData.append("price", data.price);
@@ -44,7 +45,7 @@ export const CreateProduct = () => {
     mutate(formData, {
       onSuccess: () => {
         message.success("success");
-        navigate("/product")
+        navigate("/product");
       },
       onError: (error) => {
         message.error(error.message);

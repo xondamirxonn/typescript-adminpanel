@@ -8,7 +8,6 @@ import {
   Switch,
   UploadFile,
   UploadProps,
-  message,
 } from "antd";
 import { useGetSubCategory } from "../../Pages/Sub-Category/services/query/useGetSubCategory";
 import Dragger from "antd/es/upload/Dragger";
@@ -121,7 +120,6 @@ export const ProductForm: React.FC<formSubmit> = ({
           parser={(value) =>
             value?.replace(/\$\s?|(,*)/g, "") as unknown as number
           }
-          
           style={{ width: "100%" }}
         />
       </Form.Item>
