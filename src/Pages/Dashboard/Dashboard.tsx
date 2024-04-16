@@ -1,7 +1,7 @@
 import { Card, Spin } from "antd";
-import { useGetCategory } from "../Category/service/query/useGetCategory";
 import { useGetSubCategory } from "../Sub-Category/services/query/useGetSubCategory";
 import { useGetBrand } from "../Brand/services/query/useGetBrand";
+import { useGetCategory } from "../Category/service/query/useGetCategory";
 
 export const Dashboard = () => {
   const { data, isLoading } = useGetCategory();
@@ -26,7 +26,7 @@ export const Dashboard = () => {
           }}
         >
           <strong>Category</strong>
-          <span>{data?.data.results.length}</span>
+          <span>{data?.count}</span>
         </div>
       </Card>
       <Card

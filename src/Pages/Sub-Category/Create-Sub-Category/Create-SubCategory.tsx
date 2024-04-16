@@ -54,7 +54,7 @@ export const CreateSubCategory = () => {
     const value = { attributes, category_id: atrId };
     attribute(value, {
       onSuccess: () => {
-        message.success("Success");
+        message.success("Attribute added successfully");
         console.log(value);
       },
       onError: (error) => {

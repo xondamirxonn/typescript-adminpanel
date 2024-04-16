@@ -1,14 +1,16 @@
-import React, { useState } from "react";
+import React, { Children, useState } from "react";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   UploadOutlined,
   UserOutlined,
   VideoCameraOutlined,
-  BarChartOutlined
+  BarChartOutlined,
+  LogoutOutlined,
+  QuestionCircleOutlined,
 } from "@ant-design/icons";
-import { Layout, Menu, Button, theme } from "antd";
-import { Link, Outlet} from "react-router-dom";
+import { Layout, Menu, Button, theme, Tooltip, Modal, message } from "antd";
+import { Link, Outlet } from "react-router-dom";
 import Cookies from "js-cookie";
 
 const { Header, Sider, Content } = Layout;
@@ -22,7 +24,22 @@ const MainLayout: React.FC = () => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+  const { confirm } = Modal;
 
+  const showConfirm = () => {
+    confirm({
+      title: "Are you sure you want to log out?",
+      icon: <QuestionCircleOutlined />,
+      onOk() {
+        Cookies.remove("user-token");
+        window.location.replace("/login");
+        
+      },
+      onCancel() {
+        message.info("The output has been cancelled");
+      },
+    });
+  };
   return (
     <Layout>
       <Sider trigger={null} collapsible collapsed={collapsed} theme="light">
@@ -71,17 +88,36 @@ const MainLayout: React.FC = () => {
       </Sider>
       <Layout>
         <Header style={{ padding: 0, background: colorBgContainer }}>
-          <Button
-            type="text"
-            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            onClick={() => setCollapsed(!collapsed)}
+          <div
             style={{
-              fontSize: "16px",
-              width: 32,
-              height: 32,
-              marginLeft: "1rem",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              paddingTop: "12px",
             }}
-          />
+          >
+            <Button
+              type="text"
+              icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+              onClick={() => setCollapsed(!collapsed)}
+              style={{
+                fontSize: "16px",
+                width: 32,
+                height: 32,
+                marginLeft: "1rem",
+              }}
+            />
+            <Tooltip title="Log Out" placement="left">
+              <LogoutOutlined
+                onClick={showConfirm}
+                style={{
+                  fontSize: "20px",
+                  marginRight: "30px",
+                  cursor: "pointer",
+                }}
+              />
+            </Tooltip>
+          </div>
         </Header>
         <Content
           style={{

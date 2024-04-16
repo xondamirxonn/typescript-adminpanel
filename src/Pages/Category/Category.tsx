@@ -10,8 +10,9 @@ import {
   Pagination,
   Modal,
   Tooltip,
+  PaginationProps,
 } from "antd";
-import { useGetCategory } from "./service/query/useGetCategory";
+import { usePaginationGetCategory } from "./service/query/usePaginationGetCategory";
 import { useDeleteAcc } from "./service/mutation/useCategoryDelete";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
@@ -36,8 +37,9 @@ interface DataType {
 }
 
 export const Category = () => {
-  const [page, setPage] = useState<number>();
-  const { data, isLoading } = useGetCategory("id", page);
+  const [page, setPage] = useState<number>(0);
+  const [pages, setPages] = useState(1);
+  const { data, isLoading } = usePaginationGetCategory("id", page);
   const { mutate } = useDeleteAcc();
   const navigate = useNavigate();
   const queryClint = useQueryClient();
@@ -46,6 +48,15 @@ export const Category = () => {
   const { data: category, isLoading: isCategoryLoading } =
     useGetSearchCategory(search);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+    setValue("");
+  };
   const [arrow] = useState("Show");
 
   const mergedArrow = useMemo(() => {
@@ -62,17 +73,13 @@ export const Category = () => {
     };
   }, [arrow]);
 
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-    setValue("");
-  };
-
   const createPage = () => {
     navigate("/create-category");
+  };
+
+  const PageOnChange: PaginationProps["onChange"] = (page) => {
+    setPages(page);
+    setPage((page - 1) * 5);
   };
 
   const del = (id: string) => {
@@ -207,7 +214,7 @@ export const Category = () => {
           justifyContent: "space-between",
         }}
       >
-        <Tooltip  title="Create Category" placement="right" >
+        <Tooltip title="Create Category" placement="right">
           <Button
             onClick={createPage}
             type="primary"
@@ -231,7 +238,6 @@ export const Category = () => {
           cancelButtonProps={{ style: { marginTop: "1rem" } }}
           okButtonProps={{ style: { display: "none" } }}
           width="60%"
-          
         >
           <div style={{ width: "100%" }}>
             <Search
@@ -296,10 +302,10 @@ export const Category = () => {
         pagination={false}
       />
       <Pagination
-        onChange={(page) => setPage((page - 1) * 5)}
+        onChange={PageOnChange}
         total={data?.pageSize}
         defaultCurrent={page}
-        // simple
+        current={pages}
         style={{ display: "flex", justifyContent: "end" }}
         pageSize={5}
       />

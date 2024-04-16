@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import request from "../../../../config/request";
-import { CategoryType } from "./useGetCategory";
+import { CategoryType } from "./usePaginationGetCategory";
 
 export const useGetSearchCategory = (title = "") => {
   return useQuery({

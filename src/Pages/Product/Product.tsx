@@ -2,6 +2,7 @@ import {
   Button,
   Image,
   Pagination,
+  PaginationProps,
   Popconfirm,
   Spin,
   Table,
@@ -23,7 +24,8 @@ interface DataType {
 }
 
 export const Product = () => {
-  const [page, setPage] = useState<number>(1);
+  const [page, setPage] = useState<number>(0);
+  const [pages, setPages] = useState(1);
   const { data, isLoading } = useGetProduct("id", page);
   const { mutate } = useDeleteProduct();
   const navigate = useNavigate();
@@ -43,6 +45,11 @@ export const Product = () => {
         queryClient.invalidateQueries({ queryKey: ["product"] });
       },
     });
+  };
+
+  const PageOnChange: PaginationProps["onChange"] = (page) => {
+    setPages(page);
+    setPage((page - 1) * 5);
   };
 
   const EditPage = (id: number) => {
@@ -108,13 +115,14 @@ export const Product = () => {
       <Button onClick={CreateProduct} type="primary">
         Create Product
       </Button>
-      <Table dataSource={dataSource} columns={columns} pagination={false} />
+      <Table dataSource={dataSource} columns={columns} pagination={false} style={{maxHeight: "70vh", overflowY: "auto" }} />
       <Pagination
-        onChange={(page) => setPage((page - 1) * 5)}
+        onChange={PageOnChange}
         total={data?.pageSize}
         defaultCurrent={page}
+        current={pages}
         simple
-        style={{ display: "flex", justifyContent: "end" }}
+        style={{ display: "flex", justifyContent: "end", marginTop: "8px" }}
         pageSize={5}
       />
     </div>
