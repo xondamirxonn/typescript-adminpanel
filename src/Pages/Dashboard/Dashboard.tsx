@@ -43,7 +43,7 @@ export const Dashboard = () => {
           }}
         >
           <strong>Sub Category</strong>
-          <span>{SubCategory?.results.length}</span>
+          <span>{SubCategory?.count}</span>
         </div>
       </Card>
       <Card
@@ -60,7 +60,7 @@ export const Dashboard = () => {
           }}
         >
           <strong>Brand</strong>
-          <span>{Brand?.results.length}</span>
+          <span>{Brand?.count}</span>
         </div>
       </Card>
     </div>

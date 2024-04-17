@@ -1,4 +1,4 @@
-import React, { Children, useState } from "react";
+import React, { useState } from "react";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -21,9 +21,11 @@ const MainLayout: React.FC = () => {
     window.location.replace("/login");
   }
   const [collapsed, setCollapsed] = useState(false);
+
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+
   const { confirm } = Modal;
 
   const showConfirm = () => {
@@ -33,13 +35,13 @@ const MainLayout: React.FC = () => {
       onOk() {
         Cookies.remove("user-token");
         window.location.replace("/login");
-        
       },
       onCancel() {
         message.info("The output has been cancelled");
       },
     });
   };
+
   return (
     <Layout>
       <Sider trigger={null} collapsible collapsed={collapsed} theme="light">

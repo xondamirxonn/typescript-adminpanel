@@ -10,7 +10,7 @@ import {
 } from "antd";
 import Dragger from "antd/es/upload/Dragger";
 import React from "react";
-import { usePaginationGetCategory } from "../../Pages/Category/service/query/usePaginationGetCategory";
+import { useGetCategory } from "./../../Pages/Category/service/query/useGetCategory";
 
 // type Categories = {
 //   id: number;
@@ -49,7 +49,7 @@ export const SubCategoryForm: React.FC<formSubmit> = ({
   isPending,
   initialValue,
 }) => {
-  const { data: categoryData } = usePaginationGetCategory();
+  const { data: categoryData } = useGetCategory();
   const [fileList, setFileList] = React.useState<UploadFile[]>([]);
 
   const onchange: UploadProps["onChange"] = ({ fileList }) => {
@@ -75,7 +75,7 @@ export const SubCategoryForm: React.FC<formSubmit> = ({
       <Form.Item name="parent">
         <Select
           defaultValue={"Categories"}
-          options={categoryData?.data.results.map((item) => ({
+          options={categoryData?.results.map((item) => ({
             value: item.id,
             label: item.title,
           }))}
