@@ -8,6 +8,7 @@ import {
   BarChartOutlined,
   LogoutOutlined,
   QuestionCircleOutlined,
+  ExclamationCircleOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu, Button, theme, Tooltip, Modal, message } from "antd";
 import { Link, Outlet } from "react-router-dom";
@@ -32,9 +33,25 @@ const MainLayout: React.FC = () => {
     confirm({
       title: "Are you sure you want to log out?",
       icon: <QuestionCircleOutlined />,
+      okText: "Yes",
+      cancelText: "No",
       onOk() {
-        Cookies.remove("user-token");
-        window.location.replace("/login");
+        // Cookies.remove("user-token");
+        // window.location.replace("/login");
+
+        confirm({
+          title: "Think about it",
+          icon: <ExclamationCircleOutlined />,
+          okText: "Yes",
+          cancelText: "No",
+          onOk() {
+            Cookies.remove("user-token");
+            window.location.replace("/login");
+          },
+          onCancel() {
+            message.info("The output has been cancelled");
+          },
+        });
       },
       onCancel() {
         message.info("The output has been cancelled");
@@ -84,6 +101,11 @@ const MainLayout: React.FC = () => {
               key: "7",
               icon: <UploadOutlined />,
               label: <Link to={"/banner"}>Banner</Link>,
+            },
+            {
+              key: "8",
+              icon: <UploadOutlined />,
+              label: <Link to={"/product-variant"}>Product Variant</Link>,
             },
           ]}
         />

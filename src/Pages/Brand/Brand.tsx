@@ -8,6 +8,7 @@ import {
   message,
   Input,
   Pagination,
+  PaginationProps,
 } from "antd";
 import { useDeleteBrand } from "./services/mutation/useDeleteBrand";
 import { useQueryClient } from "@tanstack/react-query";
@@ -30,7 +31,8 @@ interface DataType {
   title: string;
 }
 export const Brand = () => {
-  const [page, setPage] = useState<number>(1);
+  const [page, setPage] = useState<number>(0);
+  const [pages, setPages] = useState(1);
   const { mutate } = useDeleteBrand();
   const queryClient = useQueryClient();
   const [value, setValue] = useState("");
@@ -38,6 +40,11 @@ export const Brand = () => {
   const navigate = useNavigate();
   const { data: brandData, isLoading: searchLoading } = useSearchBrand(search);
   const { data: PageData, isLoading } = useFilterPaginationBran("id", page);
+
+  const PageOnChange: PaginationProps["onChange"] = (page) => {
+    setPages(page);
+    setPage((page - 1) * 5);
+  };
 
   const EditBrand = (id: string) => {
     navigate(`/edit-brand/${id}`);
@@ -209,9 +216,10 @@ export const Brand = () => {
       />
 
       <Pagination
-        onChange={(page) => setPage((page - 1) * 5)}
+        onChange={PageOnChange}
+        current={pages}
         total={PageData?.pageSize}
-        defaultCurrent={1}
+        defaultCurrent={page}
         simple
         style={{ display: "flex", justifyContent: "end" }}
         pageSize={5}

@@ -27,6 +27,7 @@ interface DataType {
   title: string;
   image: string;
   price: string;
+ 
 }
 
 interface SearchDataType {

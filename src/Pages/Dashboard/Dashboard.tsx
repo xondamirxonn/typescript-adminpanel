@@ -1,12 +1,17 @@
-import { Card, Spin } from "antd";
+import { Card, Spin, Statistic, StatisticProps } from "antd";
 import { useGetSubCategory } from "../Sub-Category/services/query/useGetSubCategory";
 import { useGetBrand } from "../Brand/services/query/useGetBrand";
 import { useGetCategory } from "../Category/service/query/useGetCategory";
+import CountUp from "react-countup";
 
 export const Dashboard = () => {
   const { data, isLoading } = useGetCategory();
   const { data: SubCategory } = useGetSubCategory();
   const { data: Brand } = useGetBrand();
+
+  const formatter: StatisticProps["formatter"] = (value) => (
+    <CountUp end={value as number} separator="," />
+  );
 
   return isLoading ? (
     <Spin size="large" fullscreen />
@@ -25,8 +30,11 @@ export const Dashboard = () => {
             alignItems: "center",
           }}
         >
-          <strong>Category</strong>
-          <span>{data?.count}</span>
+          <Statistic
+            title="Categories"
+            value={data?.count}
+            formatter={formatter}
+          />
         </div>
       </Card>
       <Card
@@ -42,8 +50,11 @@ export const Dashboard = () => {
             alignItems: "center",
           }}
         >
-          <strong>Sub Category</strong>
-          <span>{SubCategory?.count}</span>
+          <Statistic
+            title="Sub Categories"
+            value={SubCategory?.count}
+            formatter={formatter}
+          />
         </div>
       </Card>
       <Card
@@ -59,8 +70,11 @@ export const Dashboard = () => {
             alignItems: "center",
           }}
         >
-          <strong>Brand</strong>
-          <span>{Brand?.count}</span>
+          <Statistic
+            title="Brand"
+            value={Brand?.count}
+            formatter={formatter}
+          />
         </div>
       </Card>
     </div>

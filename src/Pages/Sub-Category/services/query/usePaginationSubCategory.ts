@@ -1,24 +1,25 @@
 import { useQuery } from "@tanstack/react-query";
 import request from "../../../../config/request";
-
-export interface CategoryType {
+interface SubCategoryType {
   count: number;
-  next: null | string;
+  next: string | null;
   previous: null | string;
   results: {
-    children: {}[];
     id: number;
     image: string;
+    parent: { id: number; title: string }[];
     title: string;
   }[];
 }
-export const usePaginationGetCategory = (id: string = "id", page: number = 1) => {
-
+export const usePaginationSubCategory = (
+  id: string = "id",
+  page: number = 1
+) => {
   return useQuery({
     queryKey: ["category", id, page],
     queryFn: () => {
       return request
-        .get<CategoryType>(`/category/?ordering=${id}`, {
+        .get<SubCategoryType>(`/api/subcategory/?ordering=${id}`, {
           params: { offset: page, limit: 5 },
         })
         .then((res) => {

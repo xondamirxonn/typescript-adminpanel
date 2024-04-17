@@ -1,8 +1,19 @@
-import { Button, Image, Popconfirm, Spin, Table, TableProps, message } from "antd";
-import { useGetSubCategory } from "./services/query/useGetSubCategory";
+import {
+  Button,
+  Image,
+  Pagination,
+  PaginationProps,
+  Popconfirm,
+  Spin,
+  Table,
+  TableProps,
+  message,
+} from "antd";
 import { useDeleteSubCategory } from "./services/mutation/useDeleteSubCategory";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { usePaginationSubCategory } from "./services/query/usePaginationSubCategory";
 
 // type SubCategories = {
 //   id: string;
@@ -16,15 +27,23 @@ interface DataType {
   title: string;
 }
 export const SubCategory = () => {
+  const [page, setPage] = useState<number>(0);
+  const [pages, setPages] = useState(1);
+  const { data, isLoading } = usePaginationSubCategory("id", page);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const { data, isLoading } = useGetSubCategory();
+  // const { data, isLoading } = useGetSubCategory();
   const { mutate } = useDeleteSubCategory();
+
+  const PageOnChange: PaginationProps["onChange"] = (page) => {
+    setPages(page);
+    setPage((page - 1) * 5);
+  };
+
   const subCategorPage = () => {
     navigate("/create-sub-category");
   };
 
-  
   const delSubCategory = (id: string) => {
     mutate(id, {
       onSuccess: () => {
@@ -37,8 +56,7 @@ export const SubCategory = () => {
     navigate(`/edit-sub-category/${id}`);
   };
 
-
-  const dataSource = data?.results.map((item) => ({
+  const dataSource = data?.data.results.map((item) => ({
     key: item.id,
     image: item.image,
     id: item.id,
@@ -95,12 +113,6 @@ export const SubCategory = () => {
   return isLoading ? (
     <Spin fullscreen size="large" />
   ) : (
-    // ) : String(Error) ? (
-    //   (message.error(`${"Network error"}`),
-    //   setTimeout(() => {
-    //     navigate("/");
-    //   }, 3_000)
-    //   )
     <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
       <Button
         onClick={subCategorPage}
@@ -109,7 +121,16 @@ export const SubCategory = () => {
       >
         Create Sub Category
       </Button>
-      <Table dataSource={dataSource} columns={columns} />
+      <Table dataSource={dataSource} columns={columns} pagination={false} />
+      <Pagination
+        onChange={PageOnChange}
+        current={pages}
+        total={data?.pageSize}
+        defaultCurrent={page}
+        simple
+        style={{ display: "flex", justifyContent: "end" }}
+        pageSize={5}
+      />
     </div>
   );
 };

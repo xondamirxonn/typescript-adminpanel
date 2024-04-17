@@ -1,16 +1,20 @@
 import {
   Button,
   Image,
+  Pagination,
+  PaginationProps,
   Popconfirm,
   Spin,
   Table,
   TableProps,
   message,
 } from "antd";
-import { useGetBanner } from "./services/query/useGetBanner";
+
 import { useNavigate } from "react-router-dom";
 import { useDeleteBanner } from "./services/mutation/useDeleteBanner";
 import { useQueryClient } from "@tanstack/react-query";
+import { usePaginationBanner } from "./services/query/usePaginationBanner";
+import { useState } from "react";
 
 interface DataType {
   key: number;
@@ -19,11 +23,19 @@ interface DataType {
   title: string;
 }
 export const Banner = () => {
-  const { data, isLoading } = useGetBanner();
+  const [page, setPage] = useState(0);
+  const [pages, setPages] = useState(1);
+  const { data, isLoading } = usePaginationBanner("id", page);
   const { mutate } = useDeleteBanner();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   console.log(data);
+
+  const PageOnChange: PaginationProps["onChange"] = (page) => {
+    setPages(page);
+    setPage((page - 1) * 5);
+  };
+
   const CreatePage = () => {
     navigate("/create-banner");
   };
@@ -41,7 +53,7 @@ export const Banner = () => {
     navigate(`/edit-banner/${id}`);
   };
 
-  const dataSource = data?.results.map((item) => ({
+  const dataSource = data?.data.results.map((item) => ({
     key: item.id,
     image: item.image,
     id: item.id,
@@ -97,11 +109,24 @@ export const Banner = () => {
   return isLoading ? (
     <Spin fullscreen size="large" />
   ) : (
-    <div>
-      <Button onClick={CreatePage} type="primary">
+    <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+      <Button onClick={CreatePage} type="primary" style={{ width: "150px" }}>
         Create Banner
       </Button>
-      <Table dataSource={dataSource} columns={columns} />
+      <Table
+        dataSource={dataSource}
+        columns={columns}
+        pagination={false}
+        style={{ maxHeight: "70vh", overflowY: "auto" }}
+      />
+      <Pagination
+        onChange={PageOnChange}
+        current={pages}
+        total={data?.pageSize}
+        defaultCurrent={page}
+        style={{ display: "flex", justifyContent: "end", marginTop: "10px" }}
+        pageSize={5}
+      />
     </div>
   );
 };

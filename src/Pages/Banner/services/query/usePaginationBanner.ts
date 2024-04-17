@@ -1,24 +1,24 @@
 import { useQuery } from "@tanstack/react-query";
 import request from "../../../../config/request";
-
-export interface CategoryType {
+interface BannerType {
   count: number;
-  next: null | string;
-  previous: null | string;
+  next: null | number;
+  previous: null | number;
   results: {
-    children: {}[];
+    created_at: string;
+    description: null | string;
     id: number;
     image: string;
     title: string;
+    updated_at: string;
   }[];
 }
-export const usePaginationGetCategory = (id: string = "id", page: number = 1) => {
-
+export const usePaginationBanner = (id: string = "id", page: number = 1) => {
   return useQuery({
     queryKey: ["category", id, page],
     queryFn: () => {
       return request
-        .get<CategoryType>(`/category/?ordering=${id}`, {
+        .get<BannerType>(`/banner/?ordering=${id}`, {
           params: { offset: page, limit: 5 },
         })
         .then((res) => {
