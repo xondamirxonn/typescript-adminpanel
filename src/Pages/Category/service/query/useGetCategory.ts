@@ -18,6 +18,6 @@ export const useGetCategory = () => {
   return useQuery({
     queryKey: ["category"],
     queryFn: () =>
-      request.get<CategoryType>("/category/").then((res) => res.data),
+      request.get<CategoryType>(`/category/`).then((res) => res.data),
   });
 };

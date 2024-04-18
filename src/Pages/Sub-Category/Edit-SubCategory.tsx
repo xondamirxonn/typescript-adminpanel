@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEditCategory } from "../Category/service/mutation/useEditCategory";
 import { useSingleEditData } from "../Category/service/query/useSingleEditData";
 import { Spin, Tabs, TabsProps, message } from "antd";
@@ -25,9 +25,9 @@ interface AttributeType {
 export const EditSubCategory = () => {
   const { id } = useParams();
   const { data: subCategory, isLoading } = useSingleEditData(id);
-  const { mutate } = useEditCategory(id);
+  const { mutate, isPending } = useEditCategory(id);
   const { mutate: editAttribute } = useCreateAttribute();
-
+const navigate = useNavigate()
   const EditSubCategory = (data: SubCategroyEdit) => {
     const formData = new FormData();
     formData.append("title", data.title);
@@ -57,7 +57,8 @@ export const EditSubCategory = () => {
     const value = { attributes, category_id: subCategory?.id };
     editAttribute(value, {
       onSuccess: () => {
-        message.success("Success");
+        message.success("Attribute changed successfully");
+        navigate("/sub-category")
       },
       onError: (error) => {
         message.error(error.message);
@@ -70,7 +71,7 @@ export const EditSubCategory = () => {
       key: "1",
       label: "Edit Sub Category",
       children: (
-        <Forms
+        <Forms isPending={isPending}
           submit={EditSubCategory}
           initialValues={{
             title: subCategory?.title,

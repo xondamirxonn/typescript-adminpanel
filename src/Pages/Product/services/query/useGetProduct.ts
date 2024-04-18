@@ -15,22 +15,11 @@ interface ProductType {
     title: string;
   }[];
 }
-export const useGetProduct = (id: string = "id", page: number = 1) => {
-  console.log(id, page);
-
+export const useGetProduct = () => {
   return useQuery({
-    queryKey: ["product", id, page],
+    queryKey: ["product-pagination"],
     queryFn: () => {
-      return request
-        .get<ProductType>(`/product/?ordering=${id}`, {
-          params: { offset: page, limit: 5 },
-        })
-        .then((res) => {
-          return {
-            data: res.data,
-            pageSize: Math.ceil(res.data.count),
-          };
-        });
+      return request.get<ProductType>(`/product/`).then((res) => res.data);
     },
   });
 };

@@ -220,7 +220,6 @@ export const Brand = () => {
         current={pages}
         total={PageData?.pageSize}
         defaultCurrent={page}
-        simple
         style={{ display: "flex", justifyContent: "end" }}
         pageSize={5}
       />

@@ -20,6 +20,7 @@ import { Banner } from "./Pages/Banner/Banner";
 import { CreateBanner } from "./Pages/Banner/Create-Banner";
 import { BannerSingleData } from "./Pages/Banner/Banner-SingleData";
 import { ProductVariant } from "./Pages/Product-Variant/Product-Variant";
+import { CreateProductVariant } from "./Pages/Product-Variant/Create-Product-Variant";
 
 function App() {
   return (
@@ -46,6 +47,10 @@ function App() {
           <Route path="create-banner" element={<CreateBanner />} />
           <Route path="edit-banner/:id" element={<BannerSingleData />} />
           <Route path="product-variant" element={<ProductVariant />} />
+          <Route
+            path="create-product-variant/:id"
+            element={<CreateProductVariant />}
+          />
         </Route>
       </Routes>
     </>

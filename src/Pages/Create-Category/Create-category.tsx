@@ -14,7 +14,7 @@ export type Categories = {
   };
 };
 export const CreateCategory = () => {
-  const { mutate } = useCreateCategory();
+  const { mutate, isPending } = useCreateCategory();
   const [activeKey, setActiveKey] = useState("1");
   const [disabled, setDisabled] = useState(true);
   const [categoryId, setCategoryId] = useState("");
@@ -28,7 +28,7 @@ export const CreateCategory = () => {
 
     mutate(formData, {
       onSuccess: (res) => {
-        message.success("Category added successfully");
+        message.success("Category created successfully");
         setFormSubmit(true);
         setCategoryId(String(res.data.id));
       },
@@ -50,11 +50,12 @@ export const CreateCategory = () => {
 
     mutate(formData, {
       onSuccess: () => {
-        message.success("Subcategory added successfully");
+        message.success(
+          "SubCategory created successfully"
+        );
         setFormSubmit(true);
-        setTimeout(() => {
-          navigate("/category");
-        }, 3_500);
+
+        navigate("/category");
       },
       onError: (error) => {
         message.error(error.name);
@@ -72,12 +73,12 @@ export const CreateCategory = () => {
     {
       key: "1",
       label: "Create Category",
-      children: <Forms submit={addCategory} />,
+      children: <Forms isPending={isPending} submit={addCategory} />,
     },
     {
       key: "2",
       label: `Create Sub Category`,
-      children: <Forms submit={SubCategoryCreate} />,
+      children: <Forms isPending={isPending} submit={SubCategoryCreate} />,
       disabled: disabled,
     },
   ];

@@ -92,6 +92,7 @@ export const SubCategoryForm: React.FC<formSubmit> = ({
           beforeUpload={() => false}
           fileList={fileList}
           onChange={onchange}
+          accept=".png, .jpg, .svg, .jpeg"
         >
           <p className="ant-upload-drag-icon">
             {" "}

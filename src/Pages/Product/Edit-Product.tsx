@@ -1,7 +1,7 @@
 import { Spin, message } from "antd";
 import { ProductForm } from "../../Components/Product-Form/Product-Form";
 import { useSingleProduct } from "./services/query/useSingleProduct";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEditProduct } from "./services/mutation/useEditProduct";
 
 interface EditProductType {
@@ -25,8 +25,7 @@ export const EditProduct = () => {
   const { id } = useParams();
   const { data, isLoading } = useSingleProduct(id);
   const { mutate, isPending } = useEditProduct(id);
-  console.log(id);
-  console.log(data);
+ const navigate = useNavigate()
 
   const EditProduct = (data: EditProductType) => {
     console.log(data);
@@ -51,7 +50,8 @@ export const EditProduct = () => {
 
     mutate(formData, {
       onSuccess: () => {
-        message.success("Success");
+        message.success("Product changed successfully");
+        navigate("/product")
       },
       onError: (error) => {
         message.error(error.name);

@@ -1,12 +1,10 @@
-import { Button, Image, Input, UploadFile, UploadProps } from "antd";
+import { Button, GetProp, Image, Input, UploadFile, UploadProps } from "antd";
 import { Form } from "antd";
 import { InboxOutlined } from "@ant-design/icons";
 import Dragger from "antd/es/upload/Dragger";
 import React from "react";
 
 export type Categories = {
-
-
   id: string;
   title: string;
   parent: {
@@ -28,13 +26,36 @@ export interface formSubmit {
       fileList: FileList | string;
     };
   };
+  isPending: boolean;
 }
 
-export const Forms: React.FC<formSubmit> = ({ submit, initialValues }) => {
+export const Forms: React.FC<formSubmit> = ({
+  submit,
+  initialValues,
+  isPending,
+}) => {
   const [fileList, setFileList] = React.useState<UploadFile[]>([]);
 
   const onchange: UploadProps["onChange"] = ({ fileList }) => {
     setFileList(fileList);
+  };
+  type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
+
+  const onPreview = async (file: UploadFile) => {
+    let src = file.url as string;
+    if (!src) {
+      src = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file.originFileObj as FileType);
+        reader.onload = () => resolve(reader.result as string);
+      });
+    }
+
+    const img = document.createElement("img");
+    img.src = src;
+
+    const imgWindow = window.open();
+    imgWindow?.document.write(img.outerHTML);
   };
 
   return (
@@ -55,7 +76,11 @@ export const Forms: React.FC<formSubmit> = ({ submit, initialValues }) => {
       </Form.Item>
       <Form.Item
         name={"image"}
-        // rules={[{ required: true, message: "please insert a picture " }]}
+        rules={
+          initialValues
+            ? [{ required: false }]
+            : [{ required: true, message: "Image upload is mandatory" }]
+        }
       >
         <Dragger
           listType="picture-card"
@@ -64,6 +89,9 @@ export const Forms: React.FC<formSubmit> = ({ submit, initialValues }) => {
           beforeUpload={() => false}
           fileList={fileList}
           onChange={onchange}
+          onPreview={onPreview}
+          action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+          accept=".png, .jpg, .svg, .jpeg "
         >
           <p className="ant-upload-drag-icon">
             {" "}
@@ -83,11 +111,13 @@ export const Forms: React.FC<formSubmit> = ({ submit, initialValues }) => {
           width={200}
           height={150}
           style={{ objectFit: "contain" }}
-          src={typeof initialValues?.image == "string" ? initialValues.image : ""}
+          src={
+            typeof initialValues?.image == "string" ? initialValues.image : ""
+          }
         />
       )}
       <Form.Item>
-        <Button type="primary" htmlType="submit">
+        <Button loading={isPending} type="primary" htmlType="submit">
           Submit
         </Button>
       </Form.Item>

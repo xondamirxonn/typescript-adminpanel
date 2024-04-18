@@ -8,10 +8,9 @@ import {
   BarChartOutlined,
   LogoutOutlined,
   QuestionCircleOutlined,
-  ExclamationCircleOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu, Button, theme, Tooltip, Modal, message } from "antd";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import Cookies from "js-cookie";
 
 const { Header, Sider, Content } = Layout;
@@ -22,7 +21,7 @@ const MainLayout: React.FC = () => {
     window.location.replace("/login");
   }
   const [collapsed, setCollapsed] = useState(false);
-
+  const location = useLocation();
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -36,22 +35,8 @@ const MainLayout: React.FC = () => {
       okText: "Yes",
       cancelText: "No",
       onOk() {
-        // Cookies.remove("user-token");
-        // window.location.replace("/login");
-
-        confirm({
-          title: "Think about it",
-          icon: <ExclamationCircleOutlined />,
-          okText: "Yes",
-          cancelText: "No",
-          onOk() {
-            Cookies.remove("user-token");
-            window.location.replace("/login");
-          },
-          onCancel() {
-            message.info("The output has been cancelled");
-          },
-        });
+        Cookies.remove("user-token");
+        window.location.replace("/login");
       },
       onCancel() {
         message.info("The output has been cancelled");
@@ -64,8 +49,8 @@ const MainLayout: React.FC = () => {
       <Sider trigger={null} collapsible collapsed={collapsed} theme="light">
         <div className="demo-logo-vertical" />
         <Menu
-          mode="inline"
-          defaultSelectedKeys={["1"]}
+          mode="vertical"
+          defaultSelectedKeys={[location.key]}
           items={[
             {
               key: "1",

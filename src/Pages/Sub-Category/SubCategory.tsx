@@ -15,11 +15,6 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { usePaginationSubCategory } from "./services/query/usePaginationSubCategory";
 
-// type SubCategories = {
-//   id: string;
-//   title: string;
-//   image: string;
-// };
 interface DataType {
   key: number;
   image: string;
@@ -127,7 +122,6 @@ export const SubCategory = () => {
         current={pages}
         total={data?.pageSize}
         defaultCurrent={page}
-        simple
         style={{ display: "flex", justifyContent: "end" }}
         pageSize={5}
       />

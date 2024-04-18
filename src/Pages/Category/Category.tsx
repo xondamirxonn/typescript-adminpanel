@@ -232,6 +232,8 @@ export const Category = () => {
           ></Button>
         </Tooltip>
         <Modal
+          closable={false}
+          
           title="Search..."
           open={isModalOpen}
           onCancel={handleCancel}

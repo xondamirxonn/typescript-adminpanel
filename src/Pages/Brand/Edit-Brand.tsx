@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Forms } from "../../Components/Form/Form";
 import { useEditBrand } from "./services/mutation/useEditBrand";
 import { Spin, message } from "antd";
@@ -18,7 +18,8 @@ interface BrandType {
 export const EditBrand = () => {
   const { id } = useParams();
   const { data, isLoading } = useSingleBrand(id);
-  const { mutate } = useEditBrand(id);
+  const { mutate, isPending } = useEditBrand(id);
+  const navigate = useNavigate();
   const EditBrand = (data: BrandType) => {
     const formData = new FormData();
     formData.append("title", data.title);
@@ -26,7 +27,8 @@ export const EditBrand = () => {
 
     mutate(formData, {
       onSuccess: () => {
-        message.success("Success");
+        message.success("Brand changed successfully");
+        navigate("/brand");
       },
       onError: (error) => {
         message.error(error.message);
@@ -37,6 +39,7 @@ export const EditBrand = () => {
     <Spin fullscreen size="large" />
   ) : (
     <Forms
+      isPending={isPending}
       submit={EditBrand}
       initialValues={{ title: data?.title, image: data?.image }}
     />

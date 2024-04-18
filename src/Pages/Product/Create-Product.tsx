@@ -44,7 +44,7 @@ export const CreateProduct = () => {
 
     mutate(formData, {
       onSuccess: () => {
-        message.success("success");
+        message.success("Product created successfully");
         navigate("/product");
       },
       onError: (error) => {

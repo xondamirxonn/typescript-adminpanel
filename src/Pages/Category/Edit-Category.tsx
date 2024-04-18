@@ -32,8 +32,8 @@ export const EditCategory = () => {
   const { id } = useParams();
   const { data, isLoading } = useSingleEditData(id);
   console.log(data);
-  
-  const { mutate } = useEditCategory(id);
+
+  const { mutate, isPending } = useEditCategory(id);
   const { mutate: DeleteSubCategory } = useDeleteSubCategory();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -128,6 +128,7 @@ export const EditCategory = () => {
       label: "Edit Category",
       children: (
         <Forms
+          isPending={isPending}
           submit={EditSubmit}
           initialValues={{ title: data?.title, image: data?.image }}
         />

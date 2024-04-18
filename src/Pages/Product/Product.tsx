@@ -15,11 +15,11 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useDeleteProduct } from "./services/mutation/useDeleteProduct";
 import { useQueryClient } from "@tanstack/react-query";
-import { useGetProduct } from "./services/query/useGetProduct";
 import { useState } from "react";
 import useDebounce from "../../hook/useDebounce";
 import { useSearchProduct } from "./services/query/useSearchProduct";
 import { SearchOutlined } from "@ant-design/icons";
+import { useGetPaginationProduct } from "./services/query/useGetPaginationProduct";
 
 interface DataType {
   key: number;
@@ -27,7 +27,6 @@ interface DataType {
   title: string;
   image: string;
   price: string;
- 
 }
 
 interface SearchDataType {
@@ -45,7 +44,7 @@ export const Product = () => {
     useSearchProduct(search);
   const [page, setPage] = useState<number>(0);
   const [pages, setPages] = useState(1);
-  const { data, isLoading } = useGetProduct("id", page);
+  const { data, isLoading } = useGetPaginationProduct("id", page);
   const { mutate } = useDeleteProduct();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -58,6 +57,10 @@ export const Product = () => {
   const handleCancel = () => {
     setIsModalOpen(false);
     setValue("");
+  };
+
+  const ProductSingle = (id: number) => {
+    navigate(`/create-product-variant/${id}`);
   };
 
   const SearchProduct = dataSearch?.results.map((item) => ({
@@ -104,7 +107,7 @@ export const Product = () => {
             >
               <Button danger>Delete</Button>
             </Popconfirm>
-            <Button type="primary" onClick={() => EditPage(Number(data?.id))}>
+            <Button type="primary" onClick={() => EditPage(Number(data.id))}>
               Edit
             </Button>
           </div>
@@ -183,6 +186,12 @@ export const Product = () => {
             </Popconfirm>
             <Button onClick={() => EditPage(Number(data?.id))} type="default">
               Edit
+            </Button>
+            <Button
+              onClick={() => ProductSingle(Number(data.id))}
+              type="default"
+            >
+              Variants
             </Button>
           </div>
         );
