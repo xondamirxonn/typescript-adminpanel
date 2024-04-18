@@ -52,7 +52,7 @@ export const Brand = () => {
   const delBrand = (id: string) => {
     mutate(id, {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["brand"] });
+        queryClient.invalidateQueries({ queryKey: ["pagination-brand"] });
         queryClient.invalidateQueries({ queryKey: ["search-brand"] });
         message.success("deleted successfully");
       },
@@ -97,9 +97,12 @@ export const Brand = () => {
       render: (_, data) => {
         return (
           <div style={{ display: "flex", gap: "1rem" }}>
-            <Button type="primary" onClick={() => delBrand(String(data?.id))}>
-              Delete
-            </Button>
+            <Popconfirm
+              title="Are you sure you want to delete this brand"
+              onConfirm={() => delBrand(String(data?.id))}
+            >
+              <Button type="primary">Delete</Button>
+            </Popconfirm>
             <Button type="primary" onClick={() => EditBrand(String(data.id))}>
               Edit
             </Button>
@@ -193,7 +196,7 @@ export const Brand = () => {
                         </div>
                       </div>
                       <Popconfirm
-                        title="Are you sure you want to delete this category?"
+                        title="Are you sure you want to delete this brand?"
                         onConfirm={() => delBrand(String(item.id))}
                       >
                         <Button danger>Delete</Button>

@@ -88,6 +88,7 @@ const navigate = useNavigate()
           submit={editAttributeSubmit}
           initialValue={subCategory}
           data={subCategory}
+          isLoading={isLoading}
         />
       ),
     },

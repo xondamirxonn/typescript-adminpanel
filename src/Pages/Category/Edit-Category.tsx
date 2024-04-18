@@ -6,6 +6,7 @@ import { Categories } from "../Create-Category/Create-category";
 import {
   Button,
   Image,
+  Popconfirm,
   Spin,
   Table,
   TableProps,
@@ -107,12 +108,12 @@ export const EditCategory = () => {
       render: (_, data) => {
         return (
           <div style={{ display: "flex", gap: "1rem" }}>
-            <Button
-              type="primary"
-              onClick={() => delSubCategory(String(data?.id))}
+            <Popconfirm
+              title="Are you sure you want to delete this category"
+              onConfirm={() => delSubCategory(String(data?.id))}
             >
-              Delete
-            </Button>
+              <Button danger>Delete</Button>
+            </Popconfirm>
             <Button type="primary" onClick={() => EditPage(data?.id)}>
               Edit
             </Button>
